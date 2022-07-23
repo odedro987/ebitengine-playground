@@ -40,9 +40,15 @@ func (s *MigStateBase) Update(elapsed float64) error {
 	return nil
 }
 
+func (s *MigStateBase) Add(basic basic.MigBasic) {
+	basic.Init()
+	s.members = append(s.members, basic)
+}
+
 type MigState interface {
 	Init()
 	Destroy()
 	Draw(screen *ebiten.Image)
 	Update(elapsed float64) error
+	Add(basic basic.MigBasic)
 }

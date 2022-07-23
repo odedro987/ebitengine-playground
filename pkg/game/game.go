@@ -21,6 +21,7 @@ func NewGame(width, height int, title string, initialState state.MigState) {
 		width: width,
 		height: height,
 		title: title,
+		lastFrame: time.Now(),
 	}
 	g.SwitchState(initialState)
 

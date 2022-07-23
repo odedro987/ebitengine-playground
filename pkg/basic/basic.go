@@ -2,31 +2,31 @@ package basic
 
 import "github.com/hajimehoshi/ebiten/v2"
 
-type MigBasicBase struct {
+type Base struct {
 	visible bool
 	exists  bool
 }
 
-func (b *MigBasicBase) Init() {
+func (b *Base) Init() {
 	b.visible = true
 	b.exists = true
 }
 
-func (b *MigBasicBase) Destroy() {
+func (b *Base) Destroy() {
 	b.exists = false
 }
 
-func (b *MigBasicBase) Draw(screen *ebiten.Image) {}
+func (b *Base) Draw(screen *ebiten.Image) {}
 
-func (b *MigBasicBase) Update(elapsed float64) error {
+func (b *Base) Update(elapsed float64) error {
 	return nil
 }
 
-func (b *MigBasicBase) IsVisible() bool {
+func (b *Base) IsVisible() bool {
 	return b.visible
 }
 
-func (b *MigBasicBase) Exists() bool {
+func (b *Base) Exists() bool {
 	return b.exists
 }
 

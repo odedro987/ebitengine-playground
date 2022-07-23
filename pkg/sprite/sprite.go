@@ -24,6 +24,12 @@ func (s *Base) MakeGraphic(w, h int, c color.Color) {
 	s.SetSize(w, h)
 }
 
+func (s *Base) LoadGraphic(path string) {
+	s.graphic = graphic.LoadGraphic(path)
+	w, h := s.graphic.GetImage().Size()
+	s.SetSize(w, h)
+}
+
 func (s *Base) Draw(screen *ebiten.Image) {
 	if s.graphic == nil {
 		return

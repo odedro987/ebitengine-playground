@@ -4,9 +4,9 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/odedro987/ebitengine-playground/pkg/graphic"
-	"github.com/odedro987/ebitengine-playground/pkg/math"
-	"github.com/odedro987/ebitengine-playground/pkg/object"
+	"github.com/odedro987/mig-engine/pkg/graphic"
+	"github.com/odedro987/mig-engine/pkg/math"
+	"github.com/odedro987/mig-engine/pkg/object"
 )
 
 type Base struct {
@@ -14,7 +14,7 @@ type Base struct {
 	graphic *graphic.MigGraphic
 }
 
-func New(x, y float64) (MigSprite) {
+func New(x, y float64) MigSprite {
 	s := &Base{}
 	s.SetPosition(x, y)
 	return s
@@ -35,7 +35,7 @@ func (s *Base) Draw(screen *ebiten.Image) {
 	if s.graphic == nil {
 		return
 	}
-	
+
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Rotate(s.Angle)
 	op.GeoM.Translate(s.X, s.Y)

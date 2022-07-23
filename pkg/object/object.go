@@ -1,14 +1,14 @@
 package object
 
 import (
-	"github.com/odedro987/ebitengine-playground/pkg/basic"
-	"github.com/odedro987/ebitengine-playground/pkg/math"
+	"github.com/odedro987/mig-engine/pkg/basic"
+	"github.com/odedro987/mig-engine/pkg/math"
 )
 
 type Base struct {
 	basic.Base
-	X, Y float64
-	w, h int
+	X, Y  float64
+	w, h  int
 	Angle float64
 	Scale *math.MigPoint
 }

@@ -1,4 +1,4 @@
-module github.com/odedro987/ebitengine-playground
+module github.com/odedro987/mig-engine
 
 go 1.18
 

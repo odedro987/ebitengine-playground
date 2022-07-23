@@ -5,6 +5,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/odedro987/ebitengine-playground/pkg/graphic"
+	"github.com/odedro987/ebitengine-playground/pkg/math"
 	"github.com/odedro987/ebitengine-playground/pkg/object"
 )
 
@@ -36,7 +37,11 @@ func (s *Base) Draw(screen *ebiten.Image) {
 	}
 	
 	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Rotate(s.Angle)
 	op.GeoM.Translate(s.X, s.Y)
+	if *s.Scale != *math.NewPoint(1, 1) {
+		op.GeoM.Scale(s.Scale.X, s.Scale.Y)
+	}
 	screen.DrawImage(s.graphic.GetImage(), op)
 }
 

@@ -1,11 +1,16 @@
 package object
 
-import "github.com/odedro987/ebitengine-playground/pkg/basic"
+import (
+	"github.com/odedro987/ebitengine-playground/pkg/basic"
+	"github.com/odedro987/ebitengine-playground/pkg/math"
+)
 
 type Base struct {
 	basic.Base
 	X, Y float64
 	w, h int
+	Angle float64
+	Scale *math.MigPoint
 }
 
 func New(x, y float64, w, h int) (obj MigObject) {
@@ -15,6 +20,11 @@ func New(x, y float64, w, h int) (obj MigObject) {
 		w: w,
 		h: h,
 	}
+}
+
+func (o *Base) Init() {
+	o.Base.Init()
+	o.Scale = math.NewPoint(1, 1)
 }
 
 func (o *Base) GetPosition() (x, y float64) {

@@ -21,6 +21,42 @@ func (ac *GxlAnimationController) Add(name string, frames []int, fps float64, lo
 	ac.animations[name] = NewAnimation(ac, name, frames, fps, looped)
 }
 
+func (ac *GxlAnimationController) SetFPS(fps float64) {
+	if ac.CurrAnim != nil {
+		ac.CurrAnim.SetFPS(fps)
+	}
+}
+
+func (ac *GxlAnimationController) Pause() {
+	if ac.CurrAnim != nil {
+		ac.CurrAnim.Pause()
+	}
+}
+
+func (ac *GxlAnimationController) Resume() {
+	if ac.CurrAnim != nil {
+		ac.CurrAnim.Resume()
+	}
+}
+
+func (ac *GxlAnimationController) Stop() {
+	if ac.CurrAnim != nil {
+		ac.CurrAnim.Stop()
+	}
+}
+
+func (ac *GxlAnimationController) Reset() {
+	if ac.CurrAnim != nil {
+		ac.CurrAnim.Reset()
+	}
+}
+
+func (ac *GxlAnimationController) Restart() {
+	if ac.CurrAnim != nil {
+		ac.CurrAnim.Restart()
+	}
+}
+
 func (ac *GxlAnimationController) Play(name string, force bool) {
 	anim, ok := ac.animations[name]
 	if !ok {

@@ -61,6 +61,10 @@ func (a *GxlAnimation) Reset() {
 	a.frameIndex = 0
 }
 
+func (a *GxlAnimation) Restart() {
+	a.Play(true)
+}
+
 func (a *GxlAnimation) Play(force bool) {
 	if !force && !a.isFinished {
 		a.isPaused = false

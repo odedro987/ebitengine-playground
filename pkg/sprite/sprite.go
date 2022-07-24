@@ -11,10 +11,10 @@ import (
 
 type Base struct {
 	object.Base
-	graphic *graphic.MigGraphic
+	graphic *graphic.GxlGraphic
 }
 
-func New(x, y float64) MigSprite {
+func New(x, y float64) GxlSprite {
 	s := &Base{}
 	s.SetPosition(x, y)
 	return s
@@ -45,7 +45,7 @@ func (s *Base) Draw(screen *ebiten.Image) {
 	screen.DrawImage(s.graphic.GetImage(), op)
 }
 
-type MigSprite interface {
-	object.MigObject
+type GxlSprite interface {
+	object.GxlObject
 	MakeGraphic(w, h int, c color.Color)
 }

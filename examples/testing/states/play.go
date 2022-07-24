@@ -8,7 +8,7 @@ import (
 
 type PlayState struct {
 	state.Base
-	player sprite.MigSprite
+	player sprite.GxlSprite
 }
 
 func (s *PlayState) Init() {

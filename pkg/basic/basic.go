@@ -30,7 +30,7 @@ func (b *Base) Exists() bool {
 	return b.exists
 }
 
-type MigBasic interface {
+type GxlBasic interface {
 	Init()
 	Destroy()
 	Draw(screen *ebiten.Image)

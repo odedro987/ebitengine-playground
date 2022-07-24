@@ -10,10 +10,10 @@ type Base struct {
 	X, Y  float64
 	w, h  int
 	Angle float64
-	Scale *math.MigPoint
+	Scale *math.GxlPoint
 }
 
-func New(x, y float64, w, h int) (obj MigObject) {
+func New(x, y float64, w, h int) (obj GxlObject) {
 	return &Base{
 		X: x,
 		Y: y,
@@ -43,8 +43,8 @@ func (o *Base) SetSize(w, h int) {
 	o.w, o.h = w, h
 }
 
-type MigObject interface {
-	basic.MigBasic
+type GxlObject interface {
+	basic.GxlBasic
 	GetPosition() (x, y float64)
 	SetPosition(x, y float64)
 	GetSize() (w, h int)

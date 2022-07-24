@@ -7,11 +7,11 @@ import (
 )
 
 type Base struct {
-	members []basic.MigBasic
+	members []basic.GxlBasic
 }
 
 func (s *Base) Init() {
-	s.members = make([]basic.MigBasic, 0)
+	s.members = make([]basic.GxlBasic, 0)
 }
 
 func (s *Base) Destroy() {
@@ -40,15 +40,15 @@ func (s *Base) Update(elapsed float64) error {
 	return nil
 }
 
-func (s *Base) Add(basic basic.MigBasic) {
+func (s *Base) Add(basic basic.GxlBasic) {
 	basic.Init()
 	s.members = append(s.members, basic)
 }
 
-type MigState interface {
+type GxlState interface {
 	Init()
 	Destroy()
 	Draw(screen *ebiten.Image)
 	Update(elapsed float64) error
-	Add(basic basic.MigBasic)
+	Add(basic basic.GxlBasic)
 }

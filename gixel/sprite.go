@@ -30,8 +30,15 @@ func (s *BaseGxlSprite) MakeGraphic(w, h int, c color.Color) {
 // and sets it as the sprite's graphic.
 func (s *BaseGxlSprite) LoadGraphic(path string) {
 	s.graphic = graphic.LoadGraphic(path)
-	w, h := s.graphic.GetImage().Size()
+	w, h := s.graphic.GetSize()
 	s.SetSize(w, h)
+}
+
+// LoadGraphic creates a new GlxGraphic from a file path
+// and sets it as the sprite's graphic.
+func (s *BaseGxlSprite) LoadAnimatedGraphic(path string, fw, fh int) {
+	s.graphic = graphic.LoadAnimatedGraphic(path, fw, fh)
+	s.SetSize(fw, fh)
 }
 
 func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
@@ -41,10 +48,13 @@ func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
 	}
 
 	op := &ebiten.DrawImageOptions{}
+	w, h := s.graphic.GetSize()
+	op.GeoM.Translate(float64(-w/2), float64(-h/2))
+	op.GeoM.Rotate(s.Angle * s.FacingMult.X)
 	op.GeoM.Scale(s.Scale.X*s.FacingMult.X, s.Scale.Y*s.FacingMult.Y)
-	op.GeoM.Rotate(s.Angle)
+	op.GeoM.Translate(float64(w/2), float64(h/2))
 	op.GeoM.Translate(s.X, s.Y)
-	screen.DrawImage(s.graphic.GetImage(), op)
+	screen.DrawImage(s.graphic.GetFrame(8), op)
 }
 
 type GxlSprite interface {

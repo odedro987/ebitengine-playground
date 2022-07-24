@@ -5,7 +5,6 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/odedro987/gixel-engine/gixel/graphic"
-	"github.com/odedro987/gixel-engine/gixel/math"
 )
 
 type BaseGxlSprite struct {
@@ -31,16 +30,15 @@ func (s *BaseGxlSprite) LoadGraphic(path string) {
 }
 
 func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
+	s.BaseGxlObject.Draw(screen)
 	if s.graphic == nil {
 		return
 	}
 
 	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(s.Scale.X*s.FacingMult.X, s.Scale.Y*s.FacingMult.Y)
 	op.GeoM.Rotate(s.Angle)
 	op.GeoM.Translate(s.X, s.Y)
-	if *s.Scale != *math.NewPoint(1, 1) {
-		op.GeoM.Scale(s.Scale.X, s.Scale.Y)
-	}
 	screen.DrawImage(s.graphic.GetImage(), op)
 }
 

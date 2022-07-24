@@ -1,37 +1,36 @@
-package sprite
+package gixel
 
 import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/odedro987/gixel-engine/pkg/graphic"
-	"github.com/odedro987/gixel-engine/pkg/math"
-	"github.com/odedro987/gixel-engine/pkg/object"
+	"github.com/odedro987/gixel-engine/gixel/graphic"
+	"github.com/odedro987/gixel-engine/gixel/math"
 )
 
-type Base struct {
-	object.Base
+type BaseGxlSprite struct {
+	BaseGxlObject
 	graphic *graphic.GxlGraphic
 }
 
-func New(x, y float64) GxlSprite {
-	s := &Base{}
+func NewSprite(x, y float64) GxlSprite {
+	s := &BaseGxlSprite{}
 	s.SetPosition(x, y)
 	return s
 }
 
-func (s *Base) MakeGraphic(w, h int, c color.Color) {
+func (s *BaseGxlSprite) MakeGraphic(w, h int, c color.Color) {
 	s.graphic = graphic.MakeGraphic(w, h, c)
 	s.SetSize(w, h)
 }
 
-func (s *Base) LoadGraphic(path string) {
+func (s *BaseGxlSprite) LoadGraphic(path string) {
 	s.graphic = graphic.LoadGraphic(path)
 	w, h := s.graphic.GetImage().Size()
 	s.SetSize(w, h)
 }
 
-func (s *Base) Draw(screen *ebiten.Image) {
+func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
 	if s.graphic == nil {
 		return
 	}
@@ -46,6 +45,6 @@ func (s *Base) Draw(screen *ebiten.Image) {
 }
 
 type GxlSprite interface {
-	object.GxlObject
+	GxlObject
 	MakeGraphic(w, h int, c color.Color)
 }

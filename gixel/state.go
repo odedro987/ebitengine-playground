@@ -1,26 +1,25 @@
-package state
+package gixel
 
 import (
-	"github.com/odedro987/gixel-engine/pkg/basic"
-
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-type Base struct {
-	members []basic.GxlBasic
+type BaseGxlState struct {
+	Game    *GxlGame
+	members []GxlBasic
 }
 
-func (s *Base) Init() {
-	s.members = make([]basic.GxlBasic, 0)
+func (s *BaseGxlState) Init() {
+	s.members = make([]GxlBasic, 0)
 }
 
-func (s *Base) Destroy() {
+func (s *BaseGxlState) Destroy() {
 	for _, m := range s.members {
 		m.Destroy()
 	}
 }
 
-func (s *Base) Draw(screen *ebiten.Image) {
+func (s *BaseGxlState) Draw(screen *ebiten.Image) {
 	for _, m := range s.members {
 		if m.Exists() && m.IsVisible() {
 			m.Draw(screen)
@@ -28,7 +27,7 @@ func (s *Base) Draw(screen *ebiten.Image) {
 	}
 }
 
-func (s *Base) Update(elapsed float64) error {
+func (s *BaseGxlState) Update(elapsed float64) error {
 	for _, m := range s.members {
 		if m.Exists() {
 			err := m.Update(elapsed)
@@ -40,7 +39,7 @@ func (s *Base) Update(elapsed float64) error {
 	return nil
 }
 
-func (s *Base) Add(basic basic.GxlBasic) {
+func (s *BaseGxlState) Add(basic GxlBasic) {
 	basic.Init()
 	s.members = append(s.members, basic)
 }
@@ -50,5 +49,5 @@ type GxlState interface {
 	Destroy()
 	Draw(screen *ebiten.Image)
 	Update(elapsed float64) error
-	Add(basic basic.GxlBasic)
+	Add(basic GxlBasic)
 }

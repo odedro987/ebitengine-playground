@@ -1,11 +1,10 @@
-package game
+package gixel
 
 import (
 	"log"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/odedro987/gixel-engine/pkg/state"
 )
 
 type GxlGame struct {
@@ -13,10 +12,10 @@ type GxlGame struct {
 	height    int
 	title     string
 	lastFrame time.Time
-	state     state.GxlState
+	state     GxlState
 }
 
-func NewGame(width, height int, title string, initialState state.GxlState) {
+func NewGame(width, height int, title string, initialState GxlState) {
 	g := GxlGame{
 		width:     width,
 		height:    height,
@@ -35,7 +34,7 @@ func NewGame(width, height int, title string, initialState state.GxlState) {
 
 }
 
-// Update proceeds the game state.
+// Update proceeds the game
 // Update is called every tick (1/60 [s] by default).
 func (g *GxlGame) Update() error {
 	// Calculate time since last frame.
@@ -62,7 +61,7 @@ func (g *GxlGame) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHe
 	return g.width, g.height
 }
 
-func (g *GxlGame) SwitchState(nextState state.GxlState) {
+func (g *GxlGame) SwitchState(nextState GxlState) {
 	if g.state != nil {
 		g.state.Destroy()
 	}

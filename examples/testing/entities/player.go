@@ -2,11 +2,11 @@ package entities
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/odedro987/gixel-engine/pkg/sprite"
+	"github.com/odedro987/gixel-engine/gixel"
 )
 
 type player struct {
-	sprite.Base
+	gixel.BaseGxlSprite
 	speed float64
 }
 
@@ -21,7 +21,7 @@ func NewPlayer(x, y float64) *player {
 }
 
 func (p *player) Update(elapsed float64) error {
-	err := p.Base.Update(elapsed)
+	err := p.BaseGxlSprite.Update(elapsed)
 	if err != nil {
 		return err
 	}

@@ -1,32 +1,32 @@
-package basic
+package gixel
 
 import "github.com/hajimehoshi/ebiten/v2"
 
-type Base struct {
+type BaseGxlBasic struct {
 	visible bool
 	exists  bool
 }
 
-func (b *Base) Init() {
+func (b *BaseGxlBasic) Init() {
 	b.visible = true
 	b.exists = true
 }
 
-func (b *Base) Destroy() {
+func (b *BaseGxlBasic) Destroy() {
 	b.exists = false
 }
 
-func (b *Base) Draw(screen *ebiten.Image) {}
+func (b *BaseGxlBasic) Draw(screen *ebiten.Image) {}
 
-func (b *Base) Update(elapsed float64) error {
+func (b *BaseGxlBasic) Update(elapsed float64) error {
 	return nil
 }
 
-func (b *Base) IsVisible() bool {
+func (b *BaseGxlBasic) IsVisible() bool {
 	return b.visible
 }
 
-func (b *Base) Exists() bool {
+func (b *BaseGxlBasic) Exists() bool {
 	return b.exists
 }
 

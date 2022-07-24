@@ -3,21 +3,20 @@ package states
 import (
 	"image/color"
 
-	"github.com/odedro987/gixel-engine/pkg/sprite"
-	"github.com/odedro987/gixel-engine/pkg/state"
+	"github.com/odedro987/gixel-engine/gixel"
 )
 
 type MenuState struct {
-	state.Base
+	gixel.BaseGxlState
 }
 
 func (s *MenuState) Init() {
-	s.Base.Init()
+	s.BaseGxlState.Init()
 
-	box1 := sprite.New(100, 100)
+	box1 := gixel.NewSprite(100, 100)
 	box1.MakeGraphic(100, 100, color.RGBA{R: 255, A: 255})
 
-	box2 := sprite.New(100, 100)
+	box2 := gixel.NewSprite(100, 100)
 	box2.MakeGraphic(100, 100, color.RGBA{B: 255, A: 255})
 
 	s.Add(box1)

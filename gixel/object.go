@@ -1,12 +1,11 @@
-package object
+package gixel
 
 import (
-	"github.com/odedro987/gixel-engine/pkg/basic"
-	"github.com/odedro987/gixel-engine/pkg/math"
+	"github.com/odedro987/gixel-engine/gixel/math"
 )
 
-type Base struct {
-	basic.Base
+type BaseGxlObject struct {
+	BaseGxlBasic
 	X, Y  float64
 	w, h  int
 	Angle float64
@@ -14,7 +13,7 @@ type Base struct {
 }
 
 func New(x, y float64, w, h int) (obj GxlObject) {
-	return &Base{
+	return &BaseGxlObject{
 		X: x,
 		Y: y,
 		w: w,
@@ -22,29 +21,29 @@ func New(x, y float64, w, h int) (obj GxlObject) {
 	}
 }
 
-func (o *Base) Init() {
-	o.Base.Init()
+func (o *BaseGxlObject) Init() {
+	o.BaseGxlBasic.Init()
 	o.Scale = math.NewPoint(1, 1)
 }
 
-func (o *Base) GetPosition() (x, y float64) {
+func (o *BaseGxlObject) GetPosition() (x, y float64) {
 	return o.X, o.Y
 }
 
-func (o *Base) SetPosition(x, y float64) {
+func (o *BaseGxlObject) SetPosition(x, y float64) {
 	o.X, o.Y = x, y
 }
 
-func (o *Base) GetSize() (w, h int) {
+func (o *BaseGxlObject) GetSize() (w, h int) {
 	return o.w, o.h
 }
 
-func (o *Base) SetSize(w, h int) {
+func (o *BaseGxlObject) SetSize(w, h int) {
 	o.w, o.h = w, h
 }
 
 type GxlObject interface {
-	basic.GxlBasic
+	GxlBasic
 	GetPosition() (x, y float64)
 	SetPosition(x, y float64)
 	GetSize() (w, h int)

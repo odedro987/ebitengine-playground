@@ -4,12 +4,19 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/odedro987/gixel-engine/gixel/animation"
 	"github.com/odedro987/gixel-engine/gixel/graphic"
 )
 
 type BaseGxlSprite struct {
 	BaseGxlObject
-	graphic *graphic.GxlGraphic
+	graphic   *graphic.GxlGraphic
+	Animation *animation.GxlAnimationController
+}
+
+func (s *BaseGxlSprite) Init() {
+	s.BaseGxlObject.Init()
+	s.Animation = animation.NewAnimationController()
 }
 
 // NewSprite creates a new instance of GxlSprite in a given position.
@@ -41,6 +48,17 @@ func (s *BaseGxlSprite) LoadAnimatedGraphic(path string, fw, fh int) {
 	s.SetSize(fw, fh)
 }
 
+func (s *BaseGxlSprite) Update(elapsed float64) error {
+	err := s.BaseGxlObject.Update(elapsed)
+	if err != nil {
+		return err
+	}
+
+	s.Animation.Update(elapsed)
+
+	return nil
+}
+
 func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
 	s.BaseGxlObject.Draw(screen)
 	if s.graphic == nil {
@@ -54,7 +72,13 @@ func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
 	op.GeoM.Scale(s.Scale.X*s.FacingMult.X, s.Scale.Y*s.FacingMult.Y)
 	op.GeoM.Translate(float64(w/2), float64(h/2))
 	op.GeoM.Translate(s.X, s.Y)
-	screen.DrawImage(s.graphic.GetFrame(8), op)
+
+	frameIdx := 0
+	if s.Animation.CurrAnim != nil {
+		frameIdx = s.Animation.FrameIndex
+	}
+
+	screen.DrawImage(s.graphic.GetFrame(frameIdx), op)
 }
 
 type GxlSprite interface {

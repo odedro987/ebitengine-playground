@@ -67,5 +67,6 @@ func (g *GxlGame) SwitchState(nextState GxlState) {
 	}
 
 	g.state = nextState
+	nextState.SetGame(g)
 	g.state.Init()
 }

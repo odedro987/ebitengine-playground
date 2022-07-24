@@ -44,10 +44,15 @@ func (s *BaseGxlState) Add(basic GxlBasic) {
 	s.members = append(s.members, basic)
 }
 
+func (s *BaseGxlState) SetGame(game *GxlGame) {
+	s.Game = game
+}
+
 type GxlState interface {
 	Init()
 	Destroy()
 	Draw(screen *ebiten.Image)
 	Update(elapsed float64) error
 	Add(basic GxlBasic)
+	SetGame(game *GxlGame)
 }

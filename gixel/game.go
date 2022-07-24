@@ -61,6 +61,8 @@ func (g *GxlGame) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHe
 	return g.width, g.height
 }
 
+// SwitchState changes the game's current state and initializes it.
+// It also calls the current state's Destroy func.
 func (g *GxlGame) SwitchState(nextState GxlState) {
 	if g.state != nil {
 		g.state.Destroy()

@@ -28,10 +28,10 @@ type BaseGxlObject struct {
 
 func (o *BaseGxlObject) Init() {
 	o.BaseGxlBasic.Init()
-	o.facingFlip = make(map[GxlDirection]math.GxlPoint)
 	o.Scale = math.NewPoint(1, 1)
-	o.facing = None
+	o.facingFlip = make(map[GxlDirection]math.GxlPoint)
 	o.FacingMult = math.NewPoint(1, 1)
+	o.facing = None
 }
 
 func (o *BaseGxlObject) GetPosition() (x, y float64) {
@@ -72,6 +72,8 @@ func (o *BaseGxlObject) SetFacingFlip(dir GxlDirection, flipX, flipY bool) {
 
 func (s *BaseGxlObject) Draw(screen *ebiten.Image) {
 	s.BaseGxlBasic.Draw(screen)
+
+	// Set `FacingMult` based on `facing`
 	if s.facing != None {
 		flipMult, ok := s.facingFlip[s.facing]
 		if ok {

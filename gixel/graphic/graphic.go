@@ -12,6 +12,9 @@ type GxlGraphic struct {
 	img *ebiten.Image
 }
 
+// MakeGraphic creates a new ebiten.Image fills it with a given color.
+//
+// Returns a pointer of the GxlGraphic.
 func MakeGraphic(w, h int, c color.Color) *GxlGraphic {
 	img := ebiten.NewImage(w, h)
 	img.Fill(c)
@@ -21,6 +24,9 @@ func MakeGraphic(w, h int, c color.Color) *GxlGraphic {
 	}
 }
 
+// MakeGraphic creates a new ebiten.Image from a file path.
+//
+// Returns a pointer of the GxlGraphic.
 func LoadGraphic(path string) *GxlGraphic {
 	img, _, err := ebitenutil.NewImageFromFile(path)
 	if err != nil {

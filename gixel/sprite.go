@@ -12,17 +12,22 @@ type BaseGxlSprite struct {
 	graphic *graphic.GxlGraphic
 }
 
+// NewSprite creates a new instance of GxlSprite in a given position.
 func NewSprite(x, y float64) GxlSprite {
 	s := &BaseGxlSprite{}
 	s.SetPosition(x, y)
 	return s
 }
 
+// MakeGraphic creates a new GlxGraphic instance in form of a rectangle
+// with given color and sets it as the sprite's graphic.
 func (s *BaseGxlSprite) MakeGraphic(w, h int, c color.Color) {
 	s.graphic = graphic.MakeGraphic(w, h, c)
 	s.SetSize(w, h)
 }
 
+// LoadGraphic creates a new GlxGraphic from a file path
+// and sets it as the sprite's graphic.
 func (s *BaseGxlSprite) LoadGraphic(path string) {
 	s.graphic = graphic.LoadGraphic(path)
 	w, h := s.graphic.GetImage().Size()
@@ -45,4 +50,5 @@ func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
 type GxlSprite interface {
 	GxlObject
 	MakeGraphic(w, h int, c color.Color)
+	LoadGraphic(path string)
 }

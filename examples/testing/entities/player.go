@@ -21,15 +21,18 @@ func NewPlayer(x, y float64) *player {
 
 func (p *player) Init() {
 	p.BaseGxlSprite.Init()
-	p.LoadGraphic("assets/WispAvatar.png")
-	p.SetFacingFlip(gixel.Right, true, false)
-	p.SetFacingFlip(gixel.Left, false, false)
-	p.SetFacingFlip(gixel.Up, false, true)
-	p.SetFacingFlip(gixel.Down, false, false)
-	p.SetFacingFlip(gixel.Right|gixel.Up, true, true)
-	p.SetFacingFlip(gixel.Right|gixel.Down, true, false)
-	p.SetFacingFlip(gixel.Left|gixel.Up, false, true)
-	p.SetFacingFlip(gixel.Left|gixel.Down, false, false)
+	p.LoadAnimatedGraphic("assets/Don2.png", 32, 28)
+	p.SetFacingFlip(gixel.Right, false, false)
+	p.SetFacingFlip(gixel.Left, true, false)
+	p.Animation.Add("idle", []int{0}, 1, false)
+	p.Animation.Add("walk", []int{2, 3, 4}, 15, true)
+	p.Animation.Play("idle", false)
+	// p.SetFacingFlip(gixel.Up, false, true)
+	// p.SetFacingFlip(gixel.Down, false, false)
+	// p.SetFacingFlip(gixel.Right|gixel.Up, true, true)
+	// p.SetFacingFlip(gixel.Right|gixel.Down, true, false)
+	// p.SetFacingFlip(gixel.Left|gixel.Up, false, true)
+	// p.SetFacingFlip(gixel.Left|gixel.Down, false, false)
 }
 
 func (p *player) Update(elapsed float64) error {
@@ -38,28 +41,41 @@ func (p *player) Update(elapsed float64) error {
 		return err
 	}
 
-	facing := p.GetFacing()
+	// facing := p.GetFacing()
+	hasMoved := false
 
 	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
 		p.X += p.speed * elapsed
-		facing |= gixel.Right
-		facing &= 0x1111 - gixel.Left
+		p.SetFacing(gixel.Right)
+		hasMoved = true
+		// facing |= gixel.Right
+		// facing &= 0x1111 - gixel.Left
 	} else if ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
 		p.X -= p.speed * elapsed
-		facing |= gixel.Left
-		facing &= 0x1111 - gixel.Right
+		p.SetFacing(gixel.Left)
+		hasMoved = true
+		// facing |= gixel.Left
+		// facing &= 0x1111 - gixel.Right
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyArrowUp) {
 		p.Y -= p.speed * elapsed
-		facing |= gixel.Up
-		facing &= 0x1111 - gixel.Down
+		hasMoved = true
+		// facing |= gixel.Up
+		// facing &= 0x1111 - gixel.Down
 	} else if ebiten.IsKeyPressed(ebiten.KeyArrowDown) {
 		p.Y += p.speed * elapsed
-		facing |= gixel.Down
-		facing &= 0x1111 - gixel.Up
+		hasMoved = true
+		// facing |= gixel.Down
+		// facing &= 0x1111 - gixel.Up
 	}
 
-	p.SetFacing(facing)
+	if !hasMoved {
+		p.Animation.Play("idle", true)
+	} else {
+		p.Animation.Play("walk", false)
+	}
+
+	// p.SetFacing(facing)
 	return nil
 }

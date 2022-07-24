@@ -5,6 +5,7 @@ import (
 	"github.com/odedro987/gixel-engine/gixel/math"
 )
 
+// TODO: Figure out a place to have this type
 type GxlDirection uint16
 
 const (

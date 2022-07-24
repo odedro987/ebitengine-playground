@@ -39,9 +39,11 @@ func (s *BaseGxlState) Update(elapsed float64) error {
 	return nil
 }
 
-func (s *BaseGxlState) Add(basic GxlBasic) {
-	basic.Init()
-	s.members = append(s.members, basic)
+func (s *BaseGxlState) Add(basics ...GxlBasic) {
+	for _, b := range basics {
+		b.Init()
+		s.members = append(s.members, b)
+	}
 }
 
 func (s *BaseGxlState) SetGame(game *GxlGame) {
@@ -53,6 +55,6 @@ type GxlState interface {
 	Destroy()
 	Draw(screen *ebiten.Image)
 	Update(elapsed float64) error
-	Add(basic GxlBasic)
+	Add(basic ...GxlBasic)
 	SetGame(game *GxlGame)
 }

@@ -12,7 +12,7 @@ type player struct {
 
 func NewPlayer(x, y float64) *player {
 	p := &player{
-		speed: 60,
+		speed: 100,
 	}
 	p.SetPosition(x, y)
 	p.LoadGraphic("assets/WispAvatar.png")

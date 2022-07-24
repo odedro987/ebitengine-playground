@@ -6,7 +6,5 @@ import (
 )
 
 func main() {
-	s := states.PlayState{}
-
-	gixel.NewGame(640, 480, "MIG", &s)
+	gixel.NewGame(640, 480, "MIG", &states.MenuState{})
 }

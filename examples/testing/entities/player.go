@@ -2,7 +2,7 @@ package entities
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/odedro987/mig-engine/pkg/sprite"
+	"github.com/odedro987/gixel-engine/pkg/sprite"
 )
 
 type player struct {

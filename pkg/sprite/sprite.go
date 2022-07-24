@@ -4,9 +4,9 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/odedro987/mig-engine/pkg/graphic"
-	"github.com/odedro987/mig-engine/pkg/math"
-	"github.com/odedro987/mig-engine/pkg/object"
+	"github.com/odedro987/gixel-engine/pkg/graphic"
+	"github.com/odedro987/gixel-engine/pkg/math"
+	"github.com/odedro987/gixel-engine/pkg/object"
 )
 
 type Base struct {

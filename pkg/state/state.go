@@ -1,7 +1,7 @@
 package state
 
 import (
-	"github.com/odedro987/mig-engine/pkg/basic"
+	"github.com/odedro987/gixel-engine/pkg/basic"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )

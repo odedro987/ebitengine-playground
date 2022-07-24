@@ -1,4 +1,4 @@
-module github.com/odedro987/mig-engine
+module github.com/odedro987/gixel-engine
 
 go 1.18
 

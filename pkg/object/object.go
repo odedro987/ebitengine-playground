@@ -1,8 +1,8 @@
 package object
 
 import (
-	"github.com/odedro987/mig-engine/pkg/basic"
-	"github.com/odedro987/mig-engine/pkg/math"
+	"github.com/odedro987/gixel-engine/pkg/basic"
+	"github.com/odedro987/gixel-engine/pkg/math"
 )
 
 type Base struct {

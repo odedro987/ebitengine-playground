@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/odedro987/mig-engine/examples/testing/states"
-	"github.com/odedro987/mig-engine/pkg/game"
+	"github.com/odedro987/gixel-engine/examples/testing/states"
+	"github.com/odedro987/gixel-engine/pkg/game"
 )
 
 func main() {

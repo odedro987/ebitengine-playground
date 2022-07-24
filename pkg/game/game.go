@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/odedro987/mig-engine/pkg/state"
+	"github.com/odedro987/gixel-engine/pkg/state"
 )
 
 type GxlGame struct {

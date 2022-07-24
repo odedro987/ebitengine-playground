@@ -1,9 +1,9 @@
 package states
 
 import (
-	"github.com/odedro987/mig-engine/examples/testing/entities"
-	"github.com/odedro987/mig-engine/pkg/sprite"
-	"github.com/odedro987/mig-engine/pkg/state"
+	"github.com/odedro987/gixel-engine/examples/testing/entities"
+	"github.com/odedro987/gixel-engine/pkg/sprite"
+	"github.com/odedro987/gixel-engine/pkg/state"
 )
 
 type PlayState struct {

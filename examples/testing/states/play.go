@@ -2,8 +2,12 @@ package states
 
 import (
 	"image/color"
+	"math/rand"
+	"strconv"
 
-	"github.com/odedro987/gixel-engine/examples/testing/entities"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/odedro987/gixel-engine/gixel"
 )
 
@@ -17,15 +21,12 @@ func (s *PlayState) Init() {
 
 	s.testGroup = gixel.NewGroup[gixel.GxlSprite](0)
 
-	player1 := entities.NewPlayer(100, 100)
-	player2 := entities.NewPlayer(100, 200)
-	testSprite := gixel.NewSprite(50, 50)
-	testSprite.MakeGraphic(50, 50, color.White)
-
-	s.testGroup.Add(player1)
-	s.testGroup.Add(player2)
-
 	s.Add(s.testGroup)
+}
+
+func (s *PlayState) Draw(screen *ebiten.Image) {
+	s.BaseGxlState.Draw(screen)
+	ebitenutil.DebugPrint(screen, strconv.Itoa(s.testGroup.Length()))
 }
 
 func (s *PlayState) Update(elapsed float64) error {
@@ -34,10 +35,21 @@ func (s *PlayState) Update(elapsed float64) error {
 		return err
 	}
 
+	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+		obj := s.testGroup.Recycle(func() gixel.GxlSprite {
+			return gixel.NewSprite(0, 0)
+		})
+		(*obj).SetPosition(0, float64(rand.Int()%300))
+		(*obj).MakeGraphic(50, 50, color.White)
+	}
+
 	s.testGroup.Range(
 		func(_ int, member *gixel.GxlSprite) bool {
 			posX, posY := (*member).GetPosition()
-			(*member).SetPosition(posX+elapsed*10, posY)
+			(*member).SetPosition(posX+elapsed*40, posY)
+			if rand.Float64() > 0.99 {
+				s.testGroup.Remove(member)
+			}
 			return true
 		},
 	)

@@ -7,7 +7,6 @@ import (
 type GxlGroup[T GxlBasic] struct {
 	BaseGxlBasic
 	members       []*T
-	length        int
 	maxSize       int
 	recycleMarker func() int
 }
@@ -21,7 +20,7 @@ func NewGroup[T GxlBasic](maxSize int) *GxlGroup[T] {
 	if maxSize == 0 {
 		members = make([]*T, 0)
 	} else {
-		members = make([]*T, maxSize)
+		members = make([]*T, 0, maxSize)
 	}
 
 	group := GxlGroup[T]{
@@ -48,23 +47,16 @@ func (g *GxlGroup[T]) Add(object T) *T {
 
 	if freeSlotIdx != -1 {
 		g.members[freeSlotIdx] = &object
-
-		if freeSlotIdx >= g.length {
-			g.length = freeSlotIdx + 1
-		}
-
-		(object).Init()
+		object.Init()
 		return &object
 	}
 
-	if g.maxSize > 0 && g.length >= g.maxSize {
+	if g.maxSize > 0 && len(g.members) >= g.maxSize {
 		//warn
 		return nil
 	}
 
 	g.members = append(g.members, &object)
-	g.length++
-
 	object.Init()
 	return &object
 }
@@ -82,7 +74,7 @@ func (g *GxlGroup[T]) getFirstAvailable() *T {
 func (g *GxlGroup[T]) Recycle(factory func() T) *T {
 	// Case group has limit
 	if g.maxSize > 0 {
-		if g.length < g.maxSize {
+		if len(g.members) < g.maxSize {
 			obj := factory()
 			g.Add(obj)
 			return &obj
@@ -115,7 +107,7 @@ func (g *GxlGroup[T]) Remove(object *T) *T {
 }
 
 func (g *GxlGroup[T]) Length() int {
-	return g.length
+	return len(g.members)
 }
 
 func (g *GxlGroup[T]) Range(f func(idx int, value *T) bool) {

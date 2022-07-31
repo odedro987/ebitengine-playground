@@ -68,7 +68,6 @@ func (a *GxlAnimation) Restart() {
 func (a *GxlAnimation) Play(force bool) {
 	if !force && !a.isFinished {
 		a.isPaused = false
-		// a.isFinished = false ??? Why flixel??
 		return
 	}
 

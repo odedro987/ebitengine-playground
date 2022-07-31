@@ -1,5 +1,7 @@
 package math
 
+import "log"
+
 type GxlPoint struct {
 	X, Y float64
 }
@@ -36,7 +38,7 @@ func (p *GxlPoint) Mult(p2 *GxlPoint) GxlPoint {
 // **Panics on zero division**.
 func (p *GxlPoint) Div(p2 *GxlPoint) GxlPoint {
 	if p2.X == 0.0 || p2.Y == 0.0 {
-		panic("Zero division")
+		log.Panicln("zero division")
 	}
 
 	return GxlPoint{X: p.X / p2.X, Y: p.Y / p2.Y}

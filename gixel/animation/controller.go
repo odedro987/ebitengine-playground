@@ -1,6 +1,8 @@
 package animation
 
-import "fmt"
+import (
+	"log"
+)
 
 type GxlAnimationController struct {
 	animations map[string]*GxlAnimation
@@ -60,7 +62,7 @@ func (ac *GxlAnimationController) Restart() {
 func (ac *GxlAnimationController) Play(name string, force bool) {
 	anim, ok := ac.animations[name]
 	if !ok {
-		fmt.Printf("No animation called %s", name)
+		log.Printf("no animation called %s\n", name)
 		return
 	}
 

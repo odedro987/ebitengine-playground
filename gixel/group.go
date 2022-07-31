@@ -1,6 +1,8 @@
 package gixel
 
 import (
+	"log"
+
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -13,7 +15,7 @@ type GxlGroup[T GxlBasic] struct {
 
 func NewGroup[T GxlBasic](maxSize int) *GxlGroup[T] {
 	if maxSize < 0 {
-		panic("maxSize cannot be negative")
+		log.Panicln("maxSize cannot be negative")
 	}
 
 	var members []*T
@@ -36,7 +38,7 @@ func (g *GxlGroup[T]) Add(object T) *T {
 	freeSlotIdx := -1
 	for idx, member := range g.members {
 		if member == &object {
-			//warn
+			log.Println("object already exists in group")
 			return nil
 		}
 
@@ -52,7 +54,7 @@ func (g *GxlGroup[T]) Add(object T) *T {
 	}
 
 	if g.maxSize > 0 && len(g.members) >= g.maxSize {
-		//warn
+		log.Println("group limit exceeded")
 		return nil
 	}
 

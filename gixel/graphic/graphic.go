@@ -4,6 +4,7 @@ import (
 	"image"
 	"image/color"
 	_ "image/png"
+	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -31,7 +32,7 @@ func MakeGraphic(w, h int, c color.Color) *GxlGraphic {
 func LoadGraphic(path string) *GxlGraphic {
 	img, _, err := ebitenutil.NewImageFromFile(path)
 	if err != nil {
-		panic(err)
+		log.Panicln(err)
 		// TODO: Error handling, default value?
 	}
 
@@ -46,7 +47,7 @@ func LoadGraphic(path string) *GxlGraphic {
 func LoadAnimatedGraphic(path string, fw, fh int) *GxlGraphic {
 	img, _, err := ebitenutil.NewImageFromFile(path)
 	if err != nil {
-		panic(err)
+		log.Panicln(err)
 		// TODO: Error handling, default value?
 	}
 
@@ -74,7 +75,7 @@ func (g *GxlGraphic) GetFrames() *[]*ebiten.Image {
 
 func (g *GxlGraphic) GetFrame(idx int) *ebiten.Image {
 	if idx < 0 || idx >= len(g.frames) {
-		panic("Index out of bounds")
+		log.Panicln("index out of bounds")
 	}
 	return g.frames[idx]
 }

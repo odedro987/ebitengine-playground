@@ -13,7 +13,7 @@ import (
 
 type PlayState struct {
 	gixel.BaseGxlState
-	testGroup *gixel.GxlGroup[gixel.GxlSprite]
+	testGroup *gixel.BaseGxlGroup[gixel.GxlSprite]
 }
 
 func (s *PlayState) Init() {
@@ -47,9 +47,9 @@ func (s *PlayState) Update(elapsed float64) error {
 		func(_ int, member *gixel.GxlSprite) bool {
 			posX, posY := (*member).GetPosition()
 			(*member).SetPosition(posX+elapsed*40, posY)
-			if rand.Float64() > 0.99 {
-				s.testGroup.Remove(member)
-			}
+			// if rand.Float64() > 0.99 {
+			// 	s.testGroup.Remove(member)
+			// }
 			return true
 		},
 	)

@@ -6,35 +6,35 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-type GxlGroup[T GxlBasic] struct {
+type BaseGxlGroup[T GxlBasic] struct {
 	BaseGxlBasic
 	members       []*T
 	maxSize       int
 	recycleMarker func() int
 }
 
-func NewGroup[T GxlBasic](maxSize int) *GxlGroup[T] {
+func NewGroup[T GxlBasic](maxSize int) *BaseGxlGroup[T] {
 	if maxSize < 0 {
 		log.Panicln("maxSize cannot be negative")
 	}
 
-	var members []*T
-	if maxSize == 0 {
-		members = make([]*T, 0)
-	} else {
-		members = make([]*T, 0, maxSize)
+	return &BaseGxlGroup[T]{
+		maxSize: maxSize,
 	}
-
-	group := GxlGroup[T]{
-		members:       members,
-		maxSize:       maxSize,
-		recycleMarker: cyclicCounter(0, maxSize-1),
-	}
-
-	return &group
 }
 
-func (g *GxlGroup[T]) Add(object T) *T {
+func (g *BaseGxlGroup[T]) Init() {
+	g.BaseGxlBasic.Init()
+	if g.maxSize == 0 {
+		g.members = make([]*T, 0)
+	} else {
+		g.members = make([]*T, 0, g.maxSize)
+	}
+
+	g.recycleMarker = cyclicCounter(0, g.maxSize-1)
+}
+
+func (g *BaseGxlGroup[T]) Add(object T) *T {
 	freeSlotIdx := -1
 	for idx, member := range g.members {
 		if member == &object {
@@ -63,7 +63,7 @@ func (g *GxlGroup[T]) Add(object T) *T {
 	return &object
 }
 
-func (g *GxlGroup[T]) getFirstAvailable() *T {
+func (g *BaseGxlGroup[T]) getFirstAvailable() *T {
 	for _, member := range g.members {
 		if member != nil && !(*member).Exists() {
 			return member
@@ -73,7 +73,7 @@ func (g *GxlGroup[T]) getFirstAvailable() *T {
 	return nil
 }
 
-func (g *GxlGroup[T]) Recycle(factory func() T) *T {
+func (g *BaseGxlGroup[T]) Recycle(factory func() T) *T {
 	// Case group has limit
 	if g.maxSize > 0 {
 		if len(g.members) < g.maxSize {
@@ -97,7 +97,7 @@ func (g *GxlGroup[T]) Recycle(factory func() T) *T {
 	}
 }
 
-func (g *GxlGroup[T]) Remove(object *T) *T {
+func (g *BaseGxlGroup[T]) Remove(object *T) *T {
 	for idx, member := range g.members {
 		if member == object {
 			g.members[idx] = nil
@@ -108,11 +108,11 @@ func (g *GxlGroup[T]) Remove(object *T) *T {
 	return nil
 }
 
-func (g *GxlGroup[T]) Length() int {
+func (g *BaseGxlGroup[T]) Length() int {
 	return len(g.members)
 }
 
-func (g *GxlGroup[T]) Range(f func(idx int, value *T) bool) {
+func (g *BaseGxlGroup[T]) Range(f func(idx int, value *T) bool) {
 	for idx, m := range g.members {
 		if m == nil {
 			continue
@@ -124,7 +124,7 @@ func (g *GxlGroup[T]) Range(f func(idx int, value *T) bool) {
 	}
 }
 
-func (g *GxlGroup[T]) Draw(screen *ebiten.Image) {
+func (g *BaseGxlGroup[T]) Draw(screen *ebiten.Image) {
 	for _, m := range g.members {
 		if m != nil && (*m).Exists() && (*m).IsVisible() {
 			(*m).Draw(screen)
@@ -132,7 +132,7 @@ func (g *GxlGroup[T]) Draw(screen *ebiten.Image) {
 	}
 }
 
-func (g *GxlGroup[T]) Update(elapsed float64) error {
+func (g *BaseGxlGroup[T]) Update(elapsed float64) error {
 	for _, m := range g.members {
 		if m != nil && (*m).Exists() {
 			err := (*m).Update(elapsed)
@@ -144,7 +144,7 @@ func (g *GxlGroup[T]) Update(elapsed float64) error {
 	return nil
 }
 
-func (g *GxlGroup[T]) Destroy() {
+func (g *BaseGxlGroup[T]) Destroy() {
 	for _, m := range g.members {
 		if m != nil {
 			(*m).Destroy()
@@ -163,4 +163,14 @@ func cyclicCounter(min, max int) func() int {
 		i++
 		return i
 	}
+}
+
+type GxlGroup[T GxlBasic] interface {
+	GxlBasic
+	Add(object T) *T
+	getFirstAvailable() *T
+	Length() int
+	Range(f func(idx int, value *T) bool)
+	Recycle(factory func() T) *T
+	Remove(object *T) *T
 }

@@ -6,9 +6,10 @@ import (
 
 type GxlGroup[T GxlBasic] struct {
 	BaseGxlBasic
-	members []*T
-	length  int
-	maxSize int
+	members       []*T
+	length        int
+	maxSize       int
+	recycleMarker func() int
 }
 
 func NewGroup[T GxlBasic](maxSize int) *GxlGroup[T] {
@@ -24,8 +25,9 @@ func NewGroup[T GxlBasic](maxSize int) *GxlGroup[T] {
 	}
 
 	group := GxlGroup[T]{
-		members: members,
-		maxSize: maxSize,
+		members:       members,
+		maxSize:       maxSize,
+		recycleMarker: cyclicCounter(0, maxSize-1),
 	}
 
 	return &group
@@ -67,6 +69,40 @@ func (g *GxlGroup[T]) Add(object T) *T {
 	return &object
 }
 
+func (g *GxlGroup[T]) getFirstAvailable() *T {
+	for _, member := range g.members {
+		if member != nil && !(*member).Exists() {
+			return member
+		}
+	}
+
+	return nil
+}
+
+func (g *GxlGroup[T]) Recycle(factory func() T) *T {
+	// Case group has limit
+	if g.maxSize > 0 {
+		if g.length < g.maxSize {
+			obj := factory()
+			g.Add(obj)
+			return &obj
+		} else {
+			// On each recycle returns a ref to a member in a cyclic order
+			return g.members[g.recycleMarker()]
+		}
+	} else { // Case group has no limit
+		first := g.getFirstAvailable()
+
+		if first != nil {
+			return first
+		}
+
+		obj := factory()
+		g.Add(obj)
+		return &obj
+	}
+}
+
 func (g *GxlGroup[T]) Remove(object *T) *T {
 	for idx, member := range g.members {
 		if member == object {
@@ -76,6 +112,10 @@ func (g *GxlGroup[T]) Remove(object *T) *T {
 	}
 
 	return nil
+}
+
+func (g *GxlGroup[T]) Length() int {
+	return g.length
 }
 
 func (g *GxlGroup[T]) Range(f func(idx int, value *T) bool) {
@@ -115,5 +155,18 @@ func (g *GxlGroup[T]) Destroy() {
 		if m != nil {
 			(*m).Destroy()
 		}
+	}
+}
+
+// TODO: Figure out if a package is needed
+// cyclicCounter increments a value on func call, cycles between min and max.
+func cyclicCounter(min, max int) func() int {
+	i := min - 1
+	return func() int {
+		if i >= max {
+			i = min - 1
+		}
+		i++
+		return i
 	}
 }

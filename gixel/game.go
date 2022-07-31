@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	gl "github.com/odedro987/gixel-engine/gixel/log"
 )
 
 type GxlGame struct {
@@ -14,6 +15,8 @@ type GxlGame struct {
 	lastFrame time.Time
 	state     GxlState
 	zoom      int
+	logger    *gl.GxlLogger
+	isDebug   bool // TODO: Expose
 }
 
 func NewGame(width, height int, title string, initialState GxlState, zoom int) {
@@ -23,11 +26,17 @@ func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 		title:     title,
 		lastFrame: time.Now(),
 		zoom:      zoom,
+		isDebug:   true,
 	}
 	g.SwitchState(initialState)
 
 	ebiten.SetWindowSize(width, height)
 	ebiten.SetWindowTitle(title)
+
+	// Use custom GxlLogger
+	g.logger = gl.NewLogger(time.Second * 5)
+	log.SetFlags(0) // Remove timestamp prefix
+	log.SetOutput(g.logger)
 
 	if err := ebiten.RunGame(&g); err != nil {
 		log.Fatal(err)
@@ -55,6 +64,9 @@ func (g *GxlGame) Update() error {
 // Draw is called every frame (typically 1/60[s] for 60Hz display).
 func (g *GxlGame) Draw(screen *ebiten.Image) {
 	g.state.Draw(screen)
+	if g.isDebug {
+		g.logger.Draw(screen)
+	}
 }
 
 // Layout takes the outside size (e.g., the window size) and returns the (logical) screen size.

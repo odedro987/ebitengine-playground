@@ -32,6 +32,7 @@ func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 
 	ebiten.SetWindowSize(width, height)
 	ebiten.SetWindowTitle(title)
+	// ebiten.SetMaxTPS(60)
 
 	// Use custom GxlLogger
 	g.logger = gl.NewLogger(time.Second * 5)
@@ -49,10 +50,11 @@ func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 // Update is called every tick (1/60 [s] by default).
 func (g *GxlGame) Update() error {
 	// Calculate time since last frame.
-	elpased := time.Since(g.lastFrame).Seconds()
-	defer func() { g.lastFrame = time.Now() }()
+	// elpased := time.Since(g.lastFrame).Seconds()
+	// defer func() { g.lastFrame = time.Now() }()
 
-	err := g.state.Update(elpased)
+	// TODO: Figure out what to do with TPS
+	err := g.state.Update(1.0 / float64(ebiten.MaxTPS()))
 	if err != nil {
 		return err
 	}

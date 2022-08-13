@@ -5,6 +5,7 @@ import "github.com/hajimehoshi/ebiten/v2"
 type BaseGxlBasic struct {
 	visible bool
 	exists  bool
+	// TODO: Do we want current state ref here?
 }
 
 func (b *BaseGxlBasic) Init() {

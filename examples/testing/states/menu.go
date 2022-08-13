@@ -3,15 +3,21 @@ package states
 import (
 	"image/color"
 	"log"
+	"math"
 	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/odedro987/gixel-engine/gixel"
+	"github.com/tanema/gween"
+	"github.com/tanema/gween/ease"
 	"golang.org/x/image/font/opentype"
 )
 
 type MenuState struct {
 	gixel.BaseGxlState
+	text              *gixel.GxlText
+	textScaleSequence *gween.Sequence
+	textAngleSequence *gween.Sequence
 }
 
 func (s *MenuState) Init() {
@@ -33,6 +39,9 @@ func (s *MenuState) Init() {
 	}
 	text := gixel.NewText(100, 100, "Hello World", tt)
 
+	text.SetFontSize(16)
+	s.text = &text
+
 	s.Add(box1)
 	s.Add(box2)
 	s.Add(text)
@@ -43,6 +52,28 @@ func (s *MenuState) Update(elapsed float64) error {
 	if err != nil {
 		return err
 	}
+
+	if s.textScaleSequence == nil {
+		s.textScaleSequence = gween.NewSequence(
+			gween.New(1, 2, 5, ease.InQuad),
+			gween.New(2, 1, 5, ease.InQuad),
+		)
+		s.textScaleSequence.SetLoop(-1)
+	}
+	currentScale, _, _ := s.textScaleSequence.Update(float32(elapsed))
+	(*s.text).Scale().X = float64(currentScale)
+	(*s.text).Scale().Y = float64(currentScale)
+
+	if s.textAngleSequence == nil {
+		s.textAngleSequence = gween.NewSequence(
+			gween.New(-math.Pi*0.25, math.Pi*0.25, 2, ease.InOutElastic),
+			gween.New(math.Pi*0.25, -math.Pi*0.25, 2, ease.InOutElastic),
+		)
+		s.textAngleSequence.SetLoop(-1)
+	}
+
+	currentAngle, _, _ := s.textAngleSequence.Update(float32(elapsed))
+	*(*s.text).Angle() = float64(currentAngle)
 
 	if ebiten.IsKeyPressed(ebiten.KeyP) {
 		s.Game.SwitchState(&PlayState{})

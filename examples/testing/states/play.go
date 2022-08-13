@@ -8,11 +8,13 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/odedro987/gixel-engine/examples/testing/entities"
 	"github.com/odedro987/gixel-engine/gixel"
 )
 
 type PlayState struct {
 	gixel.BaseGxlState
+	player    gixel.GxlSprite
 	testGroup *gixel.BaseGxlGroup[gixel.GxlSprite]
 }
 
@@ -21,6 +23,9 @@ func (s *PlayState) Init() {
 
 	s.testGroup = gixel.NewGroup[gixel.GxlSprite](0)
 
+	s.player = entities.NewPlayer(100, 100)
+
+	s.Add(s.player)
 	s.Add(s.testGroup)
 }
 
@@ -45,11 +50,10 @@ func (s *PlayState) Update(elapsed float64) error {
 
 	s.testGroup.Range(
 		func(_ int, member *gixel.GxlSprite) bool {
-			posX, posY := (*member).GetPosition()
-			(*member).SetPosition(posX+elapsed*40, posY)
-			// if rand.Float64() > 0.99 {
-			// 	s.testGroup.Remove(member)
-			// }
+			*(*member).X() += elapsed * 40
+			if rand.Float64() > 0.99 {
+				s.testGroup.Remove(member)
+			}
 			return true
 		},
 	)

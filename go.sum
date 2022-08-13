@@ -25,9 +25,13 @@ github.com/kr/pretty v0.2.1/go.mod h1:ipq/a2n7PKx3OHsz4KJII5eveXtPO4qwEXGdVfWzfn
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0 h1:45sCR5RtlFHMR4UwH9sdQ5TC8v0qDQCHnXt+kaKSTVE=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
+github.com/kvartborg/vector v0.0.0-20200419093813-2cba0cabb4f0 h1:v8lWpj5957KtDMKu+xQtlu6G3ZoZR6Tn9bsfZCRG5Xw=
+github.com/kvartborg/vector v0.0.0-20200419093813-2cba0cabb4f0/go.mod h1:GAX7tMJqXx9fB1BrsTWPOXy6IBRX+J461BffVPAdpwo=
 github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8/go.mod h1:HKlIX3XHQyzLZPlr7++PzdhaXEj94dEiJgZDTsxEqUI=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+github.com/solarlune/resolv v0.5.1 h1:Ul6PAs/zaxiMUOEYz1Z6VeUj5k3CDcWMvSh+kivybDY=
+github.com/solarlune/resolv v0.5.1/go.mod h1:HjM2f/0NoVjVdZsi26GtugX5aFbA62COEFEXkOhveRw=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.5.1 h1:nOGnQDM7FYENwehXlg/kFVnos3rEvtKTjRvOWSzb6H4=
 github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5cxcmMvtA=

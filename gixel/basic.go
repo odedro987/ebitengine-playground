@@ -22,12 +22,12 @@ func (b *BaseGxlBasic) Update(elapsed float64) error {
 	return nil
 }
 
-func (b *BaseGxlBasic) IsVisible() bool {
-	return b.visible
+func (b *BaseGxlBasic) Visible() *bool {
+	return &b.visible
 }
 
-func (b *BaseGxlBasic) Exists() bool {
-	return b.exists
+func (b *BaseGxlBasic) Exists() *bool {
+	return &b.exists
 }
 
 type GxlBasic interface {
@@ -35,6 +35,6 @@ type GxlBasic interface {
 	Destroy()
 	Draw(screen *ebiten.Image)
 	Update(elapsed float64) error
-	IsVisible() bool
-	Exists() bool
+	Visible() *bool
+	Exists() *bool
 }

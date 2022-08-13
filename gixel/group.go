@@ -65,7 +65,7 @@ func (g *BaseGxlGroup[T]) Add(object T) *T {
 
 func (g *BaseGxlGroup[T]) getFirstAvailable() *T {
 	for _, member := range g.members {
-		if member != nil && !(*member).Exists() {
+		if member != nil && !*(*member).Exists() {
 			return member
 		}
 	}
@@ -126,7 +126,7 @@ func (g *BaseGxlGroup[T]) Range(f func(idx int, value *T) bool) {
 
 func (g *BaseGxlGroup[T]) Draw(screen *ebiten.Image) {
 	for _, m := range g.members {
-		if m != nil && (*m).Exists() && (*m).IsVisible() {
+		if m != nil && *(*m).Exists() && *(*m).Visible() {
 			(*m).Draw(screen)
 		}
 	}
@@ -134,7 +134,7 @@ func (g *BaseGxlGroup[T]) Draw(screen *ebiten.Image) {
 
 func (g *BaseGxlGroup[T]) Update(elapsed float64) error {
 	for _, m := range g.members {
-		if m != nil && (*m).Exists() {
+		if m != nil && *(*m).Exists() {
 			err := (*m).Update(elapsed)
 			if err != nil {
 				return err

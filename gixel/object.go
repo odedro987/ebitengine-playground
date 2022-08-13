@@ -18,29 +18,37 @@ const (
 
 type BaseGxlObject struct {
 	BaseGxlBasic
-	X, Y       float64
+	x, y       float64
 	w, h       int
-	Angle      float64
-	Scale      *math.GxlPoint
+	angle      float64
+	scale      *math.GxlPoint
 	facingFlip map[GxlDirection]math.GxlPoint
 	facing     GxlDirection
-	FacingMult *math.GxlPoint
+	facingMult *math.GxlPoint
 }
 
 func (o *BaseGxlObject) Init() {
 	o.BaseGxlBasic.Init()
-	o.Scale = math.NewPoint(1, 1)
+	o.scale = math.NewPoint(1, 1)
 	o.facingFlip = make(map[GxlDirection]math.GxlPoint)
-	o.FacingMult = math.NewPoint(1, 1)
+	o.facingMult = math.NewPoint(1, 1)
 	o.facing = None
 }
 
+func (o *BaseGxlObject) X() *float64 {
+	return &o.x
+}
+
+func (o *BaseGxlObject) Y() *float64 {
+	return &o.y
+}
+
 func (o *BaseGxlObject) GetPosition() (x, y float64) {
-	return o.X, o.Y
+	return o.x, o.y
 }
 
 func (o *BaseGxlObject) SetPosition(x, y float64) {
-	o.X, o.Y = x, y
+	o.x, o.y = x, y
 }
 
 func (o *BaseGxlObject) GetSize() (w, h int) {
@@ -51,12 +59,16 @@ func (o *BaseGxlObject) SetSize(w, h int) {
 	o.w, o.h = w, h
 }
 
-func (o *BaseGxlObject) GetFacing() GxlDirection {
-	return o.facing
+func (o *BaseGxlObject) Facing() *GxlDirection {
+	return &o.facing
 }
 
-func (o *BaseGxlObject) SetFacing(dir GxlDirection) {
-	o.facing = dir
+func (o *BaseGxlObject) Scale() *math.GxlPoint {
+	return o.scale
+}
+
+func (o *BaseGxlObject) Angle() *float64 {
+	return &o.angle
 }
 
 func (o *BaseGxlObject) SetFacingFlip(dir GxlDirection, flipX, flipY bool) {
@@ -78,18 +90,21 @@ func (s *BaseGxlObject) Draw(screen *ebiten.Image) {
 	if s.facing != None {
 		flipMult, ok := s.facingFlip[s.facing]
 		if ok {
-			s.FacingMult.Copy(&flipMult)
+			s.facingMult.Copy(&flipMult)
 		}
 	}
 }
 
 type GxlObject interface {
 	GxlBasic
+	X() *float64
+	Y() *float64
 	GetPosition() (x, y float64)
 	SetPosition(x, y float64)
 	GetSize() (w, h int)
 	SetSize(w, h int)
-	GetFacing() GxlDirection
-	SetFacing(dir GxlDirection)
+	Facing() *GxlDirection
+	Scale() *math.GxlPoint
+	Angle() *float64
 	SetFacingFlip(dir GxlDirection, flipX, flipY bool)
 }

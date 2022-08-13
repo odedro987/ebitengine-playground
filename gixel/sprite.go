@@ -11,12 +11,12 @@ import (
 type BaseGxlSprite struct {
 	BaseGxlObject
 	graphic   *graphic.GxlGraphic
-	Animation *animation.GxlAnimationController
+	animation *animation.GxlAnimationController
 }
 
 func (s *BaseGxlSprite) Init() {
 	s.BaseGxlObject.Init()
-	s.Animation = animation.NewAnimationController()
+	s.animation = animation.NewAnimationController()
 }
 
 // NewSprite creates a new instance of GxlSprite in a given position.
@@ -48,13 +48,17 @@ func (s *BaseGxlSprite) LoadAnimatedGraphic(path string, fw, fh int) {
 	s.SetSize(fw, fh)
 }
 
+func (s *BaseGxlSprite) Animation() *animation.GxlAnimationController {
+	return s.animation
+}
+
 func (s *BaseGxlSprite) Update(elapsed float64) error {
 	err := s.BaseGxlObject.Update(elapsed)
 	if err != nil {
 		return err
 	}
 
-	s.Animation.Update(elapsed)
+	s.animation.Update(elapsed)
 
 	return nil
 }
@@ -68,14 +72,14 @@ func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
 	w, h := s.graphic.GetSize()
 	op.GeoM.Translate(float64(-w/2), float64(-h/2))
-	op.GeoM.Rotate(s.Angle * s.FacingMult.X)
-	op.GeoM.Scale(s.Scale.X*s.FacingMult.X, s.Scale.Y*s.FacingMult.Y)
+	op.GeoM.Rotate(s.angle * s.facingMult.X)
+	op.GeoM.Scale(s.scale.X*s.facingMult.X, s.scale.Y*s.facingMult.Y)
 	op.GeoM.Translate(float64(w/2), float64(h/2))
-	op.GeoM.Translate(s.X, s.Y)
+	op.GeoM.Translate(s.x, s.y)
 
 	frameIdx := 0
-	if s.Animation.CurrAnim != nil {
-		frameIdx = s.Animation.FrameIndex
+	if s.animation.CurrAnim != nil {
+		frameIdx = s.animation.FrameIndex
 	}
 
 	screen.DrawImage(s.graphic.GetFrame(frameIdx), op)
@@ -85,4 +89,5 @@ type GxlSprite interface {
 	GxlObject
 	MakeGraphic(w, h int, c color.Color)
 	LoadGraphic(path string)
+	Animation() *animation.GxlAnimationController
 }

@@ -89,10 +89,10 @@ func (t *BaseGxlText) Draw(screen *ebiten.Image) {
 
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(float64(-t.w/2), float64(-t.h/2))
-	op.GeoM.Rotate(t.Angle * t.FacingMult.X)
-	op.GeoM.Scale(t.Scale.X*t.FacingMult.X, t.Scale.Y*t.FacingMult.Y)
+	op.GeoM.Rotate(t.angle * t.facingMult.X)
+	op.GeoM.Scale(t.scale.X*t.facingMult.X, t.scale.Y*t.facingMult.Y)
 	op.GeoM.Translate(float64(t.w/2), float64(t.h/2))
-	op.GeoM.Translate(t.X, t.Y)
+	op.GeoM.Translate(t.x, t.y)
 
 	screen.DrawImage(t.img, op)
 }

@@ -19,6 +19,7 @@ type MenuState struct {
 	text              *gixel.GxlText
 	textScaleSequence *gween.Sequence
 	textAngleSequence *gween.Sequence
+	textColorSequence *gween.Sequence
 }
 
 func (s *MenuState) Init() {
@@ -55,6 +56,12 @@ func (s *MenuState) Init() {
 	)
 	s.textAngleSequence.SetLoop(-1)
 
+	s.textColorSequence = gween.NewSequence(
+		gween.New(0, 255, 2, ease.InCubic),
+		gween.New(255, 0, 2, ease.InCubic),
+	)
+	s.textColorSequence.SetLoop(-1)
+
 	s.Add(box1)
 	s.Add(box2)
 	s.Add(text)
@@ -72,6 +79,10 @@ func (s *MenuState) Update(elapsed float64) error {
 
 	currentAngle, _, _ := s.textAngleSequence.Update(float32(elapsed))
 	*(*s.text).Angle() = float64(currentAngle)
+
+	currentRed, _, _ := s.textColorSequence.Update(float32(elapsed))
+	(*s.text).Color().R = 255 - uint8(currentRed)
+	(*s.text).Color().G = uint8(currentRed)
 
 	if ebiten.IsKeyPressed(ebiten.KeyP) {
 		s.Game.SwitchState(&PlayState{})

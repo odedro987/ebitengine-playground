@@ -58,5 +58,11 @@ func (s *PlayState) Update(elapsed float64) error {
 		},
 	)
 
+	if inpututil.IsKeyJustPressed(ebiten.KeyF) {
+		fullscreen := ebiten.IsFullscreen()
+		fullscreen = !fullscreen
+		ebiten.SetFullscreen(fullscreen)
+	}
+
 	return nil
 }

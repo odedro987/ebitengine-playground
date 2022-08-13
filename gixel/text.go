@@ -15,7 +15,7 @@ import (
 type BaseGxlText struct {
 	BaseGxlObject
 	text     string
-	color    color.Color
+	color    color.RGBA
 	img      *ebiten.Image
 	tt       *sfnt.Font
 	fontSize float64
@@ -35,7 +35,7 @@ func NewText(x, y float64, text string, font *sfnt.Font) GxlText {
 	t.SetPosition(x, y)
 	t.tt = font
 	t.fontSize = 8
-	t.color = color.White
+	t.color = color.RGBA{R: 255, G: 255, B: 255, A: 255}
 	t.text = text
 	return t
 }
@@ -58,16 +58,15 @@ func (t *BaseGxlText) SetFontSize(size float64) {
 	t.updateGraphic()
 }
 
-func (t *BaseGxlText) SetColor(color color.Color) {
-	t.color = color
-	t.updateGraphic()
+func (t *BaseGxlText) Color() *color.RGBA {
+	return &t.color
 }
 
 func (t *BaseGxlText) updateGraphic() {
 	newFace, err := opentype.NewFace(t.tt, &opentype.FaceOptions{
 		Size:    t.fontSize,
 		DPI:     72, // TODO: Support high dpi displays
-		Hinting: font.HintingNone,
+		Hinting: font.HintingFull,
 	})
 	if err != nil {
 		log.Fatal(err)
@@ -78,7 +77,7 @@ func (t *BaseGxlText) updateGraphic() {
 	t.w, t.h = p.X, p.Y
 
 	t.img = ebiten.NewImage(t.w, t.h)
-	text.Draw(t.img, t.text, newFace, -rect.Min.X, -rect.Min.Y, t.color)
+	text.Draw(t.img, t.text, newFace, -rect.Min.X, -rect.Min.Y, color.White)
 }
 
 func (t *BaseGxlText) Draw(screen *ebiten.Image) {
@@ -94,6 +93,8 @@ func (t *BaseGxlText) Draw(screen *ebiten.Image) {
 	op.GeoM.Translate(float64(t.w/2), float64(t.h/2))
 	op.GeoM.Translate(t.x, t.y)
 
+	op.ColorM.ScaleWithColor(t.color)
+
 	screen.DrawImage(t.img, op)
 }
 
@@ -102,6 +103,6 @@ type GxlText interface {
 	SetText(text string)
 	SetFont(font *sfnt.Font)
 	SetFontSize(size float64)
-	SetColor(color color.Color)
+	Color() *color.RGBA
 	updateGraphic()
 }

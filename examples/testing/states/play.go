@@ -27,7 +27,7 @@ func (s *PlayState) Init() {
 	s.player = entities.NewPlayer(100, 100)
 	b1 := gixel.NewSprite(150, 150)
 	b1.MakeGraphic(50, 50, color.RGBA{R: 255, A: 255})
-	*(b1.Immovable()) = true
+	*(b1.Static()) = true
 	b2 := gixel.NewSprite(50, 50)
 	b2.MakeGraphic(50, 50, color.RGBA{G: 255, A: 255})
 

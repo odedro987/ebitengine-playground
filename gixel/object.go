@@ -25,7 +25,7 @@ type BaseGxlObject struct {
 	facingFlip map[GxlDirection]math.GxlPoint
 	facing     GxlDirection
 	facingMult *math.GxlPoint
-	immovable  bool
+	static     bool
 }
 
 func (o *BaseGxlObject) Init() {
@@ -60,8 +60,8 @@ func (o *BaseGxlObject) SetSize(w, h int) {
 	o.w, o.h = w, h
 }
 
-func (o *BaseGxlObject) Immovable() *bool {
-	return &o.immovable
+func (o *BaseGxlObject) Static() *bool {
+	return &o.static
 }
 
 func (o *BaseGxlObject) Facing() *GxlDirection {
@@ -108,7 +108,7 @@ type GxlObject interface {
 	SetPosition(x, y float64)
 	GetSize() (w, h int)
 	SetSize(w, h int)
-	Immovable() *bool
+	Static() *bool
 	Facing() *GxlDirection
 	Scale() *math.GxlPoint
 	Angle() *float64

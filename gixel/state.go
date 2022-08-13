@@ -35,7 +35,7 @@ func (s *BaseGxlState) alignObjectsInSpace(objs ...GxlObject) {
 			continue
 		}
 
-		if *obj.Immovable() {
+		if *obj.Static() {
 			continue
 		}
 

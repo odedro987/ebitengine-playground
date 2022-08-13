@@ -19,6 +19,7 @@ type BaseGxlText struct {
 	img      *ebiten.Image
 	tt       *sfnt.Font
 	fontSize float64
+	// TODO: Refactor fonts to GxlFont
 }
 
 func (t *BaseGxlText) Init() {

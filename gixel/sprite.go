@@ -76,6 +76,7 @@ func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
 	op.GeoM.Scale(s.scale.X*s.facingMult.X, s.scale.Y*s.facingMult.Y)
 	op.GeoM.Translate(float64(w/2), float64(h/2))
 	op.GeoM.Translate(s.x, s.y)
+	// TODO: Add color for tinting/etc
 
 	frameIdx := 0
 	if s.animation.CurrAnim != nil {

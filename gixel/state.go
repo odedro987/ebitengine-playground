@@ -11,6 +11,7 @@ type BaseGxlState struct {
 	Game         *GxlGame
 	space        *resolv.Space
 	spaceObjects map[GxlObject]*resolv.Object
+	// TODO: Add collision manager
 }
 
 func (s *BaseGxlState) Init() {

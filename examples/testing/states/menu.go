@@ -2,16 +2,14 @@ package states
 
 import (
 	"image/color"
-	"log"
 	"math"
-	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/odedro987/gixel-engine/gixel"
+	"github.com/odedro987/gixel-engine/gixel/font"
 	"github.com/tanema/gween"
 	"github.com/tanema/gween/ease"
-	"golang.org/x/image/font/opentype"
 )
 
 type MenuState struct {
@@ -31,17 +29,19 @@ func (s *MenuState) Init() {
 	box2 := gixel.NewSprite(200, 200)
 	box2.MakeGraphic(100, 100, color.RGBA{B: 255, A: 255})
 
-	fontBytes, err := os.ReadFile("assets/nokiafc22.ttf")
-	if err != nil {
-		log.Fatal(err)
-	}
-	tt, err := opentype.Parse(fontBytes)
-	if err != nil {
-		log.Fatal(err)
-	}
-	text := gixel.NewText(100, 100, "Hello World", tt)
+	flixelFont := font.NewFont("assets/nokiafc22.ttf")
+	fontSmall := flixelFont.GetPreset(8)
+	fontMedium := flixelFont.GetPreset(16)
+	fontLarge := flixelFont.GetPreset(32)
 
-	text.SetFontSize(16)
+	textS := gixel.NewText(10, 10, "Hello World", fontSmall)
+	s.Add(textS)
+	textM := gixel.NewText(10, 20, "Hello World", fontMedium)
+	s.Add(textM)
+	textL := gixel.NewText(10, 40, "Hello World", fontLarge)
+	s.Add(textL)
+
+	text := gixel.NewText(100, 100, "Hello World", fontSmall)
 	s.text = &text
 
 	s.textScaleSequence = gween.NewSequence(

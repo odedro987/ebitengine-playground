@@ -47,6 +47,9 @@ func (s *BaseGxlState) alignObjectsInSpace(objs ...GxlObject) {
 }
 
 func (s *BaseGxlState) OverlapsObjects(obj1, obj2 GxlObject) bool {
+	if !*obj1.Exists() || !*obj2.Exists() {
+		return false
+	}
 	s.alignObjectsInSpace(obj1, obj2)
 	return s.spaceObjects[obj1].Overlaps(s.spaceObjects[obj2])
 }

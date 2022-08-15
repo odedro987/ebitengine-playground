@@ -44,6 +44,10 @@ func (s *BaseGxlSprite) Image() **ebiten.Image {
 	return &s.img
 }
 
+func (s *BaseGxlSprite) Color() *color.RGBA {
+	return &s.color
+}
+
 func (s *BaseGxlSprite) Update(elapsed float64) error {
 	err := s.BaseGxlObject.Update(elapsed)
 	if err != nil {
@@ -77,4 +81,5 @@ type GxlSprite interface {
 	MakeGraphic(w, h int, c color.Color)
 	LoadGraphic(path string)
 	Image() **ebiten.Image
+	Color() *color.RGBA
 }

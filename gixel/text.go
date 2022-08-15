@@ -16,7 +16,7 @@ type BaseGxlText struct {
 }
 
 func (t *BaseGxlText) Init(game *GxlGame) {
-	t.BaseGxlObject.Init(game)
+	t.BaseGxlSprite.Init(game)
 	t.updateGraphic()
 }
 
@@ -25,7 +25,6 @@ func NewText(x, y float64, text string, fontPreset *font.GxlFontPreset) GxlText 
 	t := &BaseGxlText{}
 	t.SetPosition(x, y)
 	t.fontPreset = fontPreset
-	t.color = color.RGBA{R: 255, G: 255, B: 255, A: 255}
 	t.text = text
 	return t
 }
@@ -43,10 +42,6 @@ func (t *BaseGxlText) SetFontPreset(fontPreset *font.GxlFontPreset) {
 	t.updateGraphic()
 }
 
-func (t *BaseGxlText) Color() *color.RGBA {
-	return &t.color
-}
-
 func (t *BaseGxlText) updateGraphic() {
 	rect := text.BoundString(t.fontPreset.GetFace(), t.text)
 	p := rect.Size()
@@ -60,6 +55,5 @@ type GxlText interface {
 	GxlSprite
 	SetText(text string)
 	SetFontPreset(fontPreset *font.GxlFontPreset)
-	Color() *color.RGBA
 	updateGraphic()
 }

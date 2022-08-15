@@ -10,7 +10,7 @@ import (
 type BaseGxlSprite struct {
 	BaseGxlObject
 	img   *ebiten.Image
-	color color.RGBA
+	color color.RGBA // TODO: Think of a better name
 }
 
 func (s *BaseGxlSprite) Init(game *GxlGame) {

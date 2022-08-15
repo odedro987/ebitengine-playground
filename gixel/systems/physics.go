@@ -7,14 +7,19 @@ import (
 type physicsRequirements interface {
 	X() *float64
 	Y() *float64
+	Angle() *float64
 }
 
 type Physics struct {
-	velocity     math.GxlPoint
-	maxVelocity  math.GxlPoint
-	drag         math.GxlPoint
-	acceleration math.GxlPoint
-	subject      *physicsRequirements
+	velocity            math.GxlPoint
+	angularVelocity     float64
+	angularAcceleration float64
+	angularDrag         float64
+	maxAngular          float64
+	maxVelocity         math.GxlPoint
+	drag                math.GxlPoint
+	acceleration        math.GxlPoint
+	subject             *physicsRequirements
 }
 
 func (p *Physics) Init(subject physicsRequirements) {
@@ -27,6 +32,22 @@ func (p *Physics) Update(elapsed float64) {
 
 func (p *Physics) Velocity() *math.GxlPoint {
 	return &p.velocity
+}
+
+func (p *Physics) AngularVelocity() *float64 {
+	return &p.angularVelocity
+}
+
+func (p *Physics) AngularAcceleration() *float64 {
+	return &p.angularAcceleration
+}
+
+func (p *Physics) AngularDrag() *float64 {
+	return &p.angularDrag
+}
+
+func (p *Physics) MaxAngular() *float64 {
+	return &p.maxAngular
 }
 
 func (p *Physics) MaxVelocity() *math.GxlPoint {
@@ -42,7 +63,12 @@ func (p *Physics) Drag() *math.GxlPoint {
 }
 
 func (p *Physics) updateMotion(elapsed float64) {
-	velocityDelta := 0.5 * (computeVelocity(p.velocity.X, p.acceleration.X, p.drag.X, p.maxVelocity.X, elapsed) - p.velocity.X)
+	velocityDelta := 0.5 * (computeVelocity(p.angularVelocity, p.angularAcceleration, p.angularDrag, p.maxAngular, elapsed) - p.angularVelocity)
+	p.angularVelocity += velocityDelta
+	*(*p.subject).Angle() += p.angularVelocity * elapsed
+	p.angularVelocity += velocityDelta
+
+	velocityDelta = 0.5 * (computeVelocity(p.velocity.X, p.acceleration.X, p.drag.X, p.maxVelocity.X, elapsed) - p.velocity.X)
 	p.velocity.X += velocityDelta
 	delta := p.velocity.X * elapsed
 	p.velocity.X += velocityDelta

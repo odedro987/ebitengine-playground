@@ -44,6 +44,14 @@ func (o *BaseGxlObject) Y() *float64 {
 	return &o.y
 }
 
+func (o *BaseGxlObject) W() *int {
+	return &o.w
+}
+
+func (o *BaseGxlObject) H() *int {
+	return &o.h
+}
+
 func (o *BaseGxlObject) GetPosition() (x, y float64) {
 	return o.x, o.y
 }
@@ -76,6 +84,14 @@ func (o *BaseGxlObject) Angle() *float64 {
 	return &o.angle
 }
 
+func (o *BaseGxlObject) Overlaps(obj GxlObject) bool {
+	if !o.exists || !*obj.Exists() {
+		return false
+	}
+
+	return *obj.X() <= o.x+float64(o.w) && o.x+float64(*obj.W()) >= o.x && *obj.Y() <= o.y+float64(o.h) && *obj.Y()+float64(*obj.H()) >= o.y
+}
+
 func (o *BaseGxlObject) SetFacingFlip(dir GxlDirection, flipX, flipY bool) {
 	x, y := 1.0, 1.0
 	if flipX {
@@ -104,6 +120,8 @@ type GxlObject interface {
 	GxlBasic
 	X() *float64
 	Y() *float64
+	W() *int
+	H() *int
 	GetPosition() (x, y float64)
 	SetPosition(x, y float64)
 	GetSize() (w, h int)
@@ -113,4 +131,5 @@ type GxlObject interface {
 	Scale() *math.GxlPoint
 	Angle() *float64
 	SetFacingFlip(dir GxlDirection, flipX, flipY bool)
+	Overlaps(obj GxlObject) bool
 }

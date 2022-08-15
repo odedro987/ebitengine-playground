@@ -20,34 +20,26 @@ func (s *BaseGxlState) Init(game *GxlGame) {
 	s.spaceObjects = make(map[GxlObject]*resolv.Object)
 }
 
-func (s *BaseGxlState) alignObjectsInSpace(objs ...GxlObject) {
-	for _, obj := range objs {
-		_, ok := s.spaceObjects[obj]
-		x, y := obj.GetPosition()
-		w, h := obj.GetSize()
-		if !ok {
-			s.spaceObjects[obj] = resolv.NewObject(x, y, float64(w), float64(h))
-			s.space.Add(s.spaceObjects[obj])
-			continue
-		}
+// func (s *BaseGxlState) alignObjectsInSpace(objs ...GxlObject) {
+// 	for _, obj := range objs {
+// 		_, ok := s.spaceObjects[obj]
+// 		x, y := obj.GetPosition()
+// 		w, h := obj.GetSize()
+// 		if !ok {
+// 			s.spaceObjects[obj] = resolv.NewObject(x, y, float64(w), float64(h))
+// 			s.space.Add(s.spaceObjects[obj])
+// 			continue
+// 		}
 
-		if *obj.Static() {
-			continue
-		}
+// 		if *obj.Static() {
+// 			continue
+// 		}
 
-		s.spaceObjects[obj].X, s.spaceObjects[obj].Y = x, y
-		s.spaceObjects[obj].W, s.spaceObjects[obj].H = float64(w), float64(h)
-		s.spaceObjects[obj].Update()
-	}
-}
-
-func (s *BaseGxlState) OverlapsObjects(obj1, obj2 GxlObject) bool {
-	if !*obj1.Exists() || !*obj2.Exists() {
-		return false
-	}
-	s.alignObjectsInSpace(obj1, obj2)
-	return s.spaceObjects[obj1].Overlaps(s.spaceObjects[obj2])
-}
+// 		s.spaceObjects[obj].X, s.spaceObjects[obj].Y = x, y
+// 		s.spaceObjects[obj].W, s.spaceObjects[obj].H = float64(w), float64(h)
+// 		s.spaceObjects[obj].Update()
+// 	}
+// }
 
 func (s *BaseGxlState) OverlapsObjectGroup(obj GxlObject, grp GxlGroup, callbacks ...CallbackFunc) bool {
 	overlapped := false
@@ -58,7 +50,7 @@ func (s *BaseGxlState) OverlapsObjectGroup(obj GxlObject, grp GxlGroup, callback
 			return true
 		}
 
-		if !s.OverlapsObjects(obj, cobj) {
+		if !obj.Overlaps(cobj) {
 			return true
 		}
 
@@ -90,7 +82,6 @@ func (s *BaseGxlState) OverlapsGroups(grp1, grp2 GxlGroup, callbacks ...Callback
 
 type GxlState interface {
 	GxlGroup
-	OverlapsObjects(obj1, obj2 GxlObject) bool
 	OverlapsObjectGroup(obj GxlObject, grp GxlGroup, callbacks ...CallbackFunc) bool
 	OverlapsGroups(grp1, grp2 GxlGroup, callbacks ...CallbackFunc) bool
 }

@@ -64,6 +64,10 @@ func (p *GxlPoint) Sub(p2 *GxlPoint) GxlPoint {
 	return GxlPoint{X: p.X - p2.X, Y: p.Y - p2.Y}
 }
 
+func (p *GxlPoint) EqualsTo(p2 *GxlPoint) bool {
+	return p.X == p2.X && p.Y == p2.Y
+}
+
 func (p *GxlPoint) SetRadians(rads float64) {
 	length := p.Length()
 	p.X = math.Cos(rads) * length

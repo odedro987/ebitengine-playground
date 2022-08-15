@@ -8,6 +8,7 @@ import (
 
 type Player struct {
 	gixel.BaseGxlSprite
+	gs.Flipping
 	gs.Physics
 	systems.Movement
 }
@@ -21,6 +22,11 @@ func NewPlayer(x, y float64) *Player {
 
 func (p *Player) Init(game *gixel.GxlGame) {
 	p.BaseGxlSprite.Init(game)
+
+	p.Flipping.Init(p)
+	p.Physics.Init(p)
+	p.Movement.Init(p)
+
 	p.LoadAnimatedGraphic("assets/player.png", 32, 32)
 	p.SetFacingFlip(gixel.Right, false, false)
 	p.SetFacingFlip(gixel.Left, true, false)
@@ -32,8 +38,6 @@ func (p *Player) Init(game *gixel.GxlGame) {
 	p.Animation().Add("StandFront", []int{0, 0, 9}, 5, true)
 	p.Animation().Add("StandBack", []int{3, 3, 10}, 5, true)
 
-	p.Physics.Init(p)
-	p.Movement.Init(p)
 }
 
 func (p *Player) Update(elapsed float64) error {
@@ -42,6 +46,7 @@ func (p *Player) Update(elapsed float64) error {
 		return err
 	}
 
+	p.Flipping.Update()
 	p.Physics.Update(elapsed)
 	p.Movement.Update(elapsed)
 

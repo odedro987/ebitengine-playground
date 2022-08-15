@@ -9,7 +9,13 @@ import (
 
 type BaseGxlSprite struct {
 	BaseGxlObject
-	img *ebiten.Image
+	img   *ebiten.Image
+	color color.RGBA
+}
+
+func (s *BaseGxlSprite) Init(game *GxlGame) {
+	s.BaseGxlObject.Init(game)
+	s.color = color.RGBA{R: 255, G: 255, B: 255, A: 255}
 }
 
 // NewSprite creates a new instance of GxlSprite in a given position.
@@ -61,6 +67,7 @@ func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
 	op.GeoM.Translate(float64(w/2), float64(h/2))
 	op.GeoM.Translate(s.x, s.y)
 	// TODO: Add color for tinting/etc
+	op.ColorM.ScaleWithColor(s.color)
 
 	screen.DrawImage(s.img, op)
 }

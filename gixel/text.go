@@ -10,10 +10,8 @@ import (
 )
 
 type BaseGxlText struct {
-	BaseGxlObject
+	BaseGxlSprite
 	text       string
-	color      color.RGBA
-	img        *ebiten.Image
 	fontPreset *font.GxlFontPreset
 }
 
@@ -58,26 +56,8 @@ func (t *BaseGxlText) updateGraphic() {
 	text.Draw(t.img, t.text, t.fontPreset.GetFace(), -rect.Min.X, -rect.Min.Y, color.White)
 }
 
-func (t *BaseGxlText) Draw(screen *ebiten.Image) {
-	t.BaseGxlObject.Draw(screen)
-	if t.img == nil {
-		return
-	}
-
-	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(float64(-t.w/2), float64(-t.h/2))
-	op.GeoM.Rotate(t.angle * t.angleMultiplier)
-	op.GeoM.Scale(t.scale.X*t.scaleMultiplier.X, t.scale.Y*t.scaleMultiplier.Y)
-	op.GeoM.Translate(float64(t.w/2), float64(t.h/2))
-	op.GeoM.Translate(t.x, t.y)
-
-	op.ColorM.ScaleWithColor(t.color)
-
-	screen.DrawImage(t.img, op)
-}
-
 type GxlText interface {
-	GxlObject
+	GxlSprite
 	SetText(text string)
 	SetFontPreset(fontPreset *font.GxlFontPreset)
 	Color() *color.RGBA

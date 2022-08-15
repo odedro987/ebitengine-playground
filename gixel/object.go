@@ -23,7 +23,6 @@ type BaseGxlObject struct {
 	angleMultiplier float64
 	scale           *math.GxlPoint
 	scaleMultiplier *math.GxlPoint
-	static          bool
 }
 
 func (o *BaseGxlObject) Init(game *GxlGame) {
@@ -65,10 +64,6 @@ func (o *BaseGxlObject) SetSize(w, h int) {
 	o.w, o.h = w, h
 }
 
-func (o *BaseGxlObject) Static() *bool {
-	return &o.static
-}
-
 func (o *BaseGxlObject) Scale() *math.GxlPoint {
 	return o.scale
 }
@@ -103,7 +98,6 @@ type GxlObject interface {
 	SetPosition(x, y float64)
 	GetSize() (w, h int)
 	SetSize(w, h int)
-	Static() *bool
 	Scale() *math.GxlPoint
 	ScaleMultiplier() *math.GxlPoint
 	Angle() *float64

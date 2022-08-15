@@ -64,5 +64,9 @@ func (s *PlayState) Update(elapsed float64) error {
 		ebiten.SetFullscreen(fullscreen)
 	}
 
+	if inpututil.IsKeyJustPressed(ebiten.KeyN) {
+		*s.Game.Timescale() = 0.5
+	}
+
 	return nil
 }

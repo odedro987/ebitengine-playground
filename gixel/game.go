@@ -17,6 +17,7 @@ type GxlGame struct {
 	zoom      int
 	logger    *gl.GxlLogger
 	isDebug   bool // TODO: Expose
+	timescale float64
 }
 
 func NewGame(width, height int, title string, initialState GxlState, zoom int) {
@@ -27,6 +28,7 @@ func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 		lastFrame: time.Now(),
 		zoom:      zoom,
 		isDebug:   true,
+		timescale: 1,
 	}
 	g.SwitchState(initialState)
 
@@ -54,7 +56,9 @@ func (g *GxlGame) Update() error {
 	// defer func() { g.lastFrame = time.Now() }()
 
 	// TODO: Figure out what to do with TPS
-	err := g.state.Update(1.0 / float64(ebiten.MaxTPS()))
+	elapsed := 1.0 / float64(ebiten.MaxTPS())
+
+	err := g.state.Update(g.timescale * elapsed)
 	if err != nil {
 		return err
 	}
@@ -87,4 +91,8 @@ func (g *GxlGame) SwitchState(nextState GxlState) {
 	g.state = nextState
 	nextState.SetGame(g)
 	g.state.Init()
+}
+
+func (g *GxlGame) Timescale() *float64 {
+	return &g.timescale
 }

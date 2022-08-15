@@ -27,7 +27,22 @@ func (p *Physics) Init(subject physicsRequirements) {
 }
 
 func (p *Physics) Update(elapsed float64) {
-	p.updateMotion(elapsed)
+	velocityDelta := 0.5 * (computeVelocity(p.angularVelocity, p.angularAcceleration, p.angularDrag, p.maxAngular, elapsed) - p.angularVelocity)
+	p.angularVelocity += velocityDelta
+	*(*p.subject).Angle() += p.angularVelocity * elapsed
+	p.angularVelocity += velocityDelta
+
+	velocityDelta = 0.5 * (computeVelocity(p.velocity.X, p.acceleration.X, p.drag.X, p.maxVelocity.X, elapsed) - p.velocity.X)
+	p.velocity.X += velocityDelta
+	delta := p.velocity.X * elapsed
+	p.velocity.X += velocityDelta
+	*(*p.subject).X() += delta
+
+	velocityDelta = 0.5 * (computeVelocity(p.velocity.Y, p.acceleration.Y, p.drag.Y, p.maxVelocity.Y, elapsed) - p.velocity.Y)
+	p.velocity.Y += velocityDelta
+	delta = p.velocity.Y * elapsed
+	p.velocity.Y += velocityDelta
+	*(*p.subject).Y() += delta
 }
 
 func (p *Physics) Velocity() *math.GxlPoint {
@@ -60,25 +75,6 @@ func (p *Physics) Acceleration() *math.GxlPoint {
 
 func (p *Physics) Drag() *math.GxlPoint {
 	return &p.drag
-}
-
-func (p *Physics) updateMotion(elapsed float64) {
-	velocityDelta := 0.5 * (computeVelocity(p.angularVelocity, p.angularAcceleration, p.angularDrag, p.maxAngular, elapsed) - p.angularVelocity)
-	p.angularVelocity += velocityDelta
-	*(*p.subject).Angle() += p.angularVelocity * elapsed
-	p.angularVelocity += velocityDelta
-
-	velocityDelta = 0.5 * (computeVelocity(p.velocity.X, p.acceleration.X, p.drag.X, p.maxVelocity.X, elapsed) - p.velocity.X)
-	p.velocity.X += velocityDelta
-	delta := p.velocity.X * elapsed
-	p.velocity.X += velocityDelta
-	*(*p.subject).X() += delta
-
-	velocityDelta = 0.5 * (computeVelocity(p.velocity.Y, p.acceleration.Y, p.drag.Y, p.maxVelocity.Y, elapsed) - p.velocity.Y)
-	p.velocity.Y += velocityDelta
-	delta = p.velocity.Y * elapsed
-	p.velocity.Y += velocityDelta
-	*(*p.subject).Y() += delta
 }
 
 func computeVelocity(velocity float64, acceleration float64, drag float64, max float64, elapsed float64) float64 {

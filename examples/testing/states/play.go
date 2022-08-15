@@ -13,7 +13,7 @@ import (
 
 type PlayState struct {
 	gixel.BaseGxlState
-	player     gixel.GxlSprite
+	player     *entities.Player
 	testGroup  *gixel.BaseGxlGroup
 	testGroup2 *gixel.BaseGxlGroup
 }
@@ -25,6 +25,7 @@ func (s *PlayState) Init() {
 	s.testGroup2 = gixel.NewGroup(0)
 
 	s.player = entities.NewPlayer(100, 100)
+
 	b1 := gixel.NewSprite(150, 150)
 	b1.MakeGraphic(50, 50, color.RGBA{R: 255, A: 255})
 	*(b1.Static()) = true

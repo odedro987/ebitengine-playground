@@ -1,7 +1,6 @@
 package gixel
 
 import (
-	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/odedro987/gixel-engine/gixel/math"
 )
 
@@ -18,22 +17,20 @@ const (
 
 type BaseGxlObject struct {
 	BaseGxlBasic
-	x, y       float64
-	w, h       int
-	angle      float64
-	scale      *math.GxlPoint
-	facingFlip map[GxlDirection]math.GxlPoint
-	facing     GxlDirection
-	facingMult *math.GxlPoint
-	static     bool
+	x, y            float64
+	w, h            int
+	angle           float64
+	angleMultiplier float64
+	scale           *math.GxlPoint
+	scaleMultiplier *math.GxlPoint
+	static          bool
 }
 
 func (o *BaseGxlObject) Init(game *GxlGame) {
 	o.BaseGxlBasic.Init(game)
 	o.scale = math.NewPoint(1, 1)
-	o.facingFlip = make(map[GxlDirection]math.GxlPoint)
-	o.facingMult = math.NewPoint(1, 1)
-	o.facing = None
+	o.scaleMultiplier = math.NewPoint(1, 1)
+	o.angleMultiplier = 1
 }
 
 func (o *BaseGxlObject) X() *float64 {
@@ -72,16 +69,20 @@ func (o *BaseGxlObject) Static() *bool {
 	return &o.static
 }
 
-func (o *BaseGxlObject) Facing() *GxlDirection {
-	return &o.facing
-}
-
 func (o *BaseGxlObject) Scale() *math.GxlPoint {
 	return o.scale
 }
 
+func (o *BaseGxlObject) ScaleMultiplier() *math.GxlPoint {
+	return o.scaleMultiplier
+}
+
 func (o *BaseGxlObject) Angle() *float64 {
 	return &o.angle
+}
+
+func (o *BaseGxlObject) AngleMultiplier() *float64 {
+	return &o.angleMultiplier
 }
 
 func (o *BaseGxlObject) Overlaps(obj GxlObject) bool {
@@ -90,30 +91,6 @@ func (o *BaseGxlObject) Overlaps(obj GxlObject) bool {
 	}
 
 	return *obj.X() <= o.x+float64(o.w) && o.x+float64(*obj.W()) >= o.x && *obj.Y() <= o.y+float64(o.h) && *obj.Y()+float64(*obj.H()) >= o.y
-}
-
-func (o *BaseGxlObject) SetFacingFlip(dir GxlDirection, flipX, flipY bool) {
-	x, y := 1.0, 1.0
-	if flipX {
-		x = -1
-	}
-	if flipY {
-		y = -1
-	}
-
-	o.facingFlip[dir] = *math.NewPoint(x, y)
-}
-
-func (s *BaseGxlObject) Draw(screen *ebiten.Image) {
-	s.BaseGxlBasic.Draw(screen)
-
-	// Set `FacingMult` based on `facing`
-	if s.facing != None {
-		flipMult, ok := s.facingFlip[s.facing]
-		if ok {
-			s.facingMult.Copy(&flipMult)
-		}
-	}
 }
 
 type GxlObject interface {
@@ -127,9 +104,9 @@ type GxlObject interface {
 	GetSize() (w, h int)
 	SetSize(w, h int)
 	Static() *bool
-	Facing() *GxlDirection
 	Scale() *math.GxlPoint
+	ScaleMultiplier() *math.GxlPoint
 	Angle() *float64
-	SetFacingFlip(dir GxlDirection, flipX, flipY bool)
+	AngleMultiplier() *float64
 	Overlaps(obj GxlObject) bool
 }

@@ -72,8 +72,8 @@ func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
 	w, h := s.graphic.GetSize()
 	op.GeoM.Translate(float64(-w/2), float64(-h/2))
-	op.GeoM.Rotate(s.angle * s.facingMult.X)
-	op.GeoM.Scale(s.scale.X*s.facingMult.X, s.scale.Y*s.facingMult.Y)
+	op.GeoM.Rotate(s.angle * s.angleMultiplier)
+	op.GeoM.Scale(s.scale.X*s.scaleMultiplier.X, s.scale.Y*s.scaleMultiplier.Y)
 	op.GeoM.Translate(float64(w/2), float64(h/2))
 	op.GeoM.Translate(s.x, s.y)
 	// TODO: Add color for tinting/etc

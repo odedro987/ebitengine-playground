@@ -23,8 +23,8 @@ func NewGroup(maxSize int) *BaseGxlGroup {
 	}
 }
 
-func (g *BaseGxlGroup) Init() {
-	g.BaseGxlBasic.Init()
+func (g *BaseGxlGroup) Init(game *GxlGame) {
+	g.BaseGxlBasic.Init(game)
 	if g.maxSize == 0 {
 		g.members = make([]*GxlBasic, 0)
 	} else {
@@ -49,7 +49,7 @@ func (g *BaseGxlGroup) Add(object GxlBasic) *GxlBasic {
 
 	if freeSlotIdx != -1 {
 		g.members[freeSlotIdx] = &object
-		object.Init()
+		object.Init(g.game)
 		return &object
 	}
 
@@ -59,7 +59,7 @@ func (g *BaseGxlGroup) Add(object GxlBasic) *GxlBasic {
 	}
 
 	g.members = append(g.members, &object)
-	object.Init()
+	object.Init(g.game)
 	return &object
 }
 

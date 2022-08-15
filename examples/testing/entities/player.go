@@ -19,8 +19,8 @@ func NewPlayer(x, y float64) *Player {
 	return p
 }
 
-func (p *Player) Init() {
-	p.BaseGxlSprite.Init()
+func (p *Player) Init(game *gixel.GxlGame) {
+	p.BaseGxlSprite.Init(game)
 	p.LoadAnimatedGraphic("assets/player.png", 32, 32)
 	p.SetFacingFlip(gixel.Right, false, false)
 	p.SetFacingFlip(gixel.Left, true, false)
@@ -44,6 +44,7 @@ func (p *Player) Update(elapsed float64) error {
 
 	p.Physics.Update(elapsed)
 	p.Movement.Update(elapsed)
+
 	p.Animation().Play(p.Movement.GetAnimName(), false)
 	return nil
 }

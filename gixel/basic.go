@@ -3,12 +3,14 @@ package gixel
 import "github.com/hajimehoshi/ebiten/v2"
 
 type BaseGxlBasic struct {
+	game    *GxlGame
 	visible bool
 	exists  bool
 	// TODO: Do we want current state ref here?
 }
 
-func (b *BaseGxlBasic) Init() {
+func (b *BaseGxlBasic) Init(g *GxlGame) {
+	b.game = g
 	b.visible = true
 	b.exists = true
 }
@@ -31,11 +33,16 @@ func (b *BaseGxlBasic) Exists() *bool {
 	return &b.exists
 }
 
+func (b *BaseGxlBasic) Game() *GxlGame {
+	return b.game
+}
+
 type GxlBasic interface {
-	Init()
+	Init(g *GxlGame)
 	Destroy()
 	Draw(screen *ebiten.Image)
 	Update(elapsed float64) error
 	Visible() *bool
 	Exists() *bool
+	Game() *GxlGame
 }

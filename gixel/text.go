@@ -17,8 +17,8 @@ type BaseGxlText struct {
 	fontPreset *font.GxlFontPreset
 }
 
-func (t *BaseGxlText) Init() {
-	t.BaseGxlObject.Init()
+func (t *BaseGxlText) Init(game *GxlGame) {
+	t.BaseGxlObject.Init(game)
 	t.updateGraphic()
 }
 

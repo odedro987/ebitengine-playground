@@ -14,8 +14,8 @@ type BaseGxlSprite struct {
 	animation *animation.GxlAnimationController
 }
 
-func (s *BaseGxlSprite) Init() {
-	s.BaseGxlObject.Init()
+func (s *BaseGxlSprite) Init(game *GxlGame) {
+	s.BaseGxlObject.Init(game)
 	s.animation = animation.NewAnimationController()
 }
 

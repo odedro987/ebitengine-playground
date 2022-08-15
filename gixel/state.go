@@ -8,21 +8,16 @@ type CallbackFunc = func(obj1, obj2 *GxlObject)
 
 type BaseGxlState struct {
 	BaseGxlGroup
-	Game         *GxlGame
 	space        *resolv.Space
 	spaceObjects map[GxlObject]*resolv.Object
 	// TODO: Add collision manager
 }
 
-func (s *BaseGxlState) Init() {
-	s.BaseGxlGroup.Init()
+func (s *BaseGxlState) Init(game *GxlGame) {
+	s.BaseGxlGroup.Init(game)
 	// TODO: Change cell size to tiles
-	s.space = resolv.NewSpace(s.Game.width, s.Game.height, 16, 16)
+	s.space = resolv.NewSpace(game.width, game.height, 16, 16)
 	s.spaceObjects = make(map[GxlObject]*resolv.Object)
-}
-
-func (s *BaseGxlState) SetGame(game *GxlGame) {
-	s.Game = game
 }
 
 func (s *BaseGxlState) alignObjectsInSpace(objs ...GxlObject) {
@@ -95,7 +90,6 @@ func (s *BaseGxlState) OverlapsGroups(grp1, grp2 GxlGroup, callbacks ...Callback
 
 type GxlState interface {
 	GxlGroup
-	SetGame(game *GxlGame)
 	OverlapsObjects(obj1, obj2 GxlObject) bool
 	OverlapsObjectGroup(obj GxlObject, grp GxlGroup, callbacks ...CallbackFunc) bool
 	OverlapsGroups(grp1, grp2 GxlGroup, callbacks ...CallbackFunc) bool

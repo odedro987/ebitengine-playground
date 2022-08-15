@@ -18,8 +18,8 @@ type PlayState struct {
 	testGroup2 *gixel.BaseGxlGroup
 }
 
-func (s *PlayState) Init() {
-	s.BaseGxlState.Init()
+func (s *PlayState) Init(game *gixel.GxlGame) {
+	s.BaseGxlState.Init(game)
 
 	s.testGroup = gixel.NewGroup(0)
 	s.testGroup2 = gixel.NewGroup(0)
@@ -65,7 +65,7 @@ func (s *PlayState) Update(elapsed float64) error {
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyN) {
-		*s.Game.Timescale() = 0.5
+		*s.Game().Timescale() = 0.5
 	}
 
 	return nil

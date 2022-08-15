@@ -34,7 +34,6 @@ func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 
 	ebiten.SetWindowSize(width, height)
 	ebiten.SetWindowTitle(title)
-	// ebiten.SetMaxTPS(60)
 
 	// Use custom GxlLogger
 	g.logger = gl.NewLogger(time.Second * 5)
@@ -51,10 +50,6 @@ func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 // Update proceeds the game
 // Update is called every tick (1/60 [s] by default).
 func (g *GxlGame) Update() error {
-	// Calculate time since last frame.
-	// elpased := time.Since(g.lastFrame).Seconds()
-	// defer func() { g.lastFrame = time.Now() }()
-
 	// TODO: Figure out what to do with TPS
 	elapsed := 1.0 / float64(ebiten.MaxTPS())
 
@@ -81,6 +76,10 @@ func (g *GxlGame) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHe
 	return g.width / g.zoom, g.height / g.zoom
 }
 
+func (g *GxlGame) State() *GxlState {
+	return &g.state
+}
+
 // SwitchState changes the game's current state and initializes it.
 // It also calls the current state's Destroy func.
 func (g *GxlGame) SwitchState(nextState GxlState) {
@@ -89,8 +88,7 @@ func (g *GxlGame) SwitchState(nextState GxlState) {
 	}
 
 	g.state = nextState
-	nextState.SetGame(g)
-	g.state.Init()
+	g.state.Init(g)
 }
 
 func (g *GxlGame) Timescale() *float64 {

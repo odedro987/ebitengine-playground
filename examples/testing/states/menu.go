@@ -20,8 +20,8 @@ type MenuState struct {
 	textColorSequence *gween.Sequence
 }
 
-func (s *MenuState) Init() {
-	s.BaseGxlState.Init()
+func (s *MenuState) Init(game *gixel.GxlGame) {
+	s.BaseGxlState.Init(game)
 
 	box1 := gixel.NewSprite(100, 100)
 	box1.MakeGraphic(100, 100, color.RGBA{R: 255, A: 255})
@@ -85,7 +85,7 @@ func (s *MenuState) Update(elapsed float64) error {
 	(*s.text).Color().G = uint8(currentRed)
 
 	if ebiten.IsKeyPressed(ebiten.KeyP) {
-		s.Game.SwitchState(&PlayState{})
+		s.Game().SwitchState(&PlayState{})
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyF) {

@@ -28,8 +28,8 @@ type BaseGxlObject struct {
 	static     bool
 }
 
-func (o *BaseGxlObject) Init() {
-	o.BaseGxlBasic.Init()
+func (o *BaseGxlObject) Init(game *GxlGame) {
+	o.BaseGxlBasic.Init(game)
 	o.scale = math.NewPoint(1, 1)
 	o.facingFlip = make(map[GxlDirection]math.GxlPoint)
 	o.facingMult = math.NewPoint(1, 1)

@@ -122,8 +122,6 @@ func (p *Movement) updateMovement(elapsed float64) {
 			(*p.subject).Acceleration().X = p.speed
 		}
 
-		// isRight := p.moveAngle >= -90 && p.moveAngle <= 90
-
 		if (p.moveAngle > -45 && p.moveAngle < 45) || (p.moveAngle > 135 && p.moveAngle <= 180) || (p.moveAngle < -135 && p.moveAngle >= -180) {
 			p.animName = "WalkSide"
 		} else {
@@ -134,9 +132,6 @@ func (p *Movement) updateMovement(elapsed float64) {
 			}
 		}
 
-		// walkSfx.setPosition(x + frameWidth / 2, y + height);
-		// walkSfx.play();
-
 		(*p.subject).Velocity().Set((*p.subject).Acceleration().X, 0)
 		newVel := (*p.subject).Velocity().PivotDegrees(&math.GxlPoint{X: 0, Y: 0}, p.moveAngle)
 		(*p.subject).Velocity().Set(newVel.X, newVel.Y)
@@ -145,7 +140,6 @@ func (p *Movement) updateMovement(elapsed float64) {
 	}
 
 	(*p.subject).Acceleration().X = 0
-	// walkSfx.stop()
 
 	if isFront {
 		p.animName = "StandFront"

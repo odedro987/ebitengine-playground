@@ -15,10 +15,9 @@ type GxlAnimation struct {
 	timer         float64
 	delay         float64
 	frames        []int
-	controller    *GxlAnimationController
 }
 
-func NewAnimation(controller *GxlAnimationController, name string, frames []int, fps float64, looped bool) *GxlAnimation {
+func NewAnimation(name string, frames []int, fps float64, looped bool) *GxlAnimation {
 	a := GxlAnimation{
 		name:          name,
 		frames:        frames,
@@ -28,7 +27,6 @@ func NewAnimation(controller *GxlAnimationController, name string, frames []int,
 		isLoop:        looped,
 		isFinished:    false,
 		isPaused:      false,
-		controller:    controller,
 	}
 	a.SetFPS(fps)
 
@@ -65,6 +63,14 @@ func (a *GxlAnimation) Restart() {
 	a.Play(true)
 }
 
+func (a *GxlAnimation) GetCurrentFrame() int {
+	return a.frames[a.frameIndex]
+}
+
+func (a *GxlAnimation) GetName() string {
+	return a.name
+}
+
 func (a *GxlAnimation) Play(force bool) {
 	if !force && !a.isFinished {
 		a.isPaused = false
@@ -83,7 +89,6 @@ func (a *GxlAnimation) Play(force bool) {
 
 func (a *GxlAnimation) Update(elapsed float64) {
 	if a.isFinished || a.delay == 0 || a.isPaused {
-		a.controller.FrameIndex = a.frames[a.frameIndex]
 		return
 	}
 
@@ -102,6 +107,4 @@ func (a *GxlAnimation) Update(elapsed float64) {
 			a.frameIndex++
 		}
 	}
-
-	a.controller.FrameIndex = a.frames[a.frameIndex]
 }

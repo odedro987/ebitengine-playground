@@ -4,19 +4,12 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/odedro987/gixel-engine/gixel/animation"
 	"github.com/odedro987/gixel-engine/gixel/graphic"
 )
 
 type BaseGxlSprite struct {
 	BaseGxlObject
-	graphic   *graphic.GxlGraphic
-	animation *animation.GxlAnimationController
-}
-
-func (s *BaseGxlSprite) Init(game *GxlGame) {
-	s.BaseGxlObject.Init(game)
-	s.animation = animation.NewAnimationController()
+	img *ebiten.Image
 }
 
 // NewSprite creates a new instance of GxlSprite in a given position.
@@ -29,27 +22,20 @@ func NewSprite(x, y float64) GxlSprite {
 // MakeGraphic creates a new GlxGraphic instance in form of a rectangle
 // with given color and sets it as the sprite's graphic.
 func (s *BaseGxlSprite) MakeGraphic(w, h int, c color.Color) {
-	s.graphic = graphic.MakeGraphic(w, h, c)
+	s.img = graphic.MakeGraphic(w, h, c).GetFrame(0)
 	s.SetSize(w, h)
 }
 
 // LoadGraphic creates a new GlxGraphic from a file path
 // and sets it as the sprite's graphic.
 func (s *BaseGxlSprite) LoadGraphic(path string) {
-	s.graphic = graphic.LoadGraphic(path)
-	w, h := s.graphic.GetSize()
+	s.img = graphic.LoadGraphic(path).GetFrame(0)
+	w, h := s.img.Size()
 	s.SetSize(w, h)
 }
 
-// LoadGraphic creates a new GlxGraphic from a file path
-// and sets it as the sprite's graphic.
-func (s *BaseGxlSprite) LoadAnimatedGraphic(path string, fw, fh int) {
-	s.graphic = graphic.LoadAnimatedGraphic(path, fw, fh)
-	s.SetSize(fw, fh)
-}
-
-func (s *BaseGxlSprite) Animation() *animation.GxlAnimationController {
-	return s.animation
+func (s *BaseGxlSprite) Image() **ebiten.Image {
+	return &s.img
 }
 
 func (s *BaseGxlSprite) Update(elapsed float64) error {
@@ -58,19 +44,17 @@ func (s *BaseGxlSprite) Update(elapsed float64) error {
 		return err
 	}
 
-	s.animation.Update(elapsed)
-
 	return nil
 }
 
 func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
 	s.BaseGxlObject.Draw(screen)
-	if s.graphic == nil {
+	if s.img == nil {
 		return
 	}
 
 	op := &ebiten.DrawImageOptions{}
-	w, h := s.graphic.GetSize()
+	w, h := s.img.Size()
 	op.GeoM.Translate(float64(-w/2), float64(-h/2))
 	op.GeoM.Rotate(s.angle * s.angleMultiplier)
 	op.GeoM.Scale(s.scale.X*s.scaleMultiplier.X, s.scale.Y*s.scaleMultiplier.Y)
@@ -78,17 +62,12 @@ func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
 	op.GeoM.Translate(s.x, s.y)
 	// TODO: Add color for tinting/etc
 
-	frameIdx := 0
-	if s.animation.CurrAnim != nil {
-		frameIdx = s.animation.FrameIndex
-	}
-
-	screen.DrawImage(s.graphic.GetFrame(frameIdx), op)
+	screen.DrawImage(s.img, op)
 }
 
 type GxlSprite interface {
 	GxlObject
 	MakeGraphic(w, h int, c color.Color)
 	LoadGraphic(path string)
-	Animation() *animation.GxlAnimationController
+	Image() **ebiten.Image
 }

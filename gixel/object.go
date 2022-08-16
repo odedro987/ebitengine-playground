@@ -85,7 +85,7 @@ func (o *BaseGxlObject) Overlaps(obj GxlObject) bool {
 		return false
 	}
 
-	return *obj.X() <= o.x+float64(o.w) && o.x+float64(*obj.W()) >= o.x && *obj.Y() <= o.y+float64(o.h) && *obj.Y()+float64(*obj.H()) >= o.y
+	return *obj.X() <= o.x+float64(o.w) && *obj.X()+float64(*obj.W()) >= o.x && *obj.Y() <= o.y+float64(o.h) && *obj.Y()+float64(*obj.H()) >= o.y
 }
 
 type GxlObject interface {

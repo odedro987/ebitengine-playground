@@ -1,4 +1,4 @@
-package systems
+package physics
 
 import (
 	"github.com/odedro987/gixel-engine/gixel/math"

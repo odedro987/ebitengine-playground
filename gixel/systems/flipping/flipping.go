@@ -1,4 +1,4 @@
-package systems
+package flipping
 
 import (
 	"github.com/odedro987/gixel-engine/gixel"

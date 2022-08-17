@@ -15,6 +15,8 @@ type GxlAnimation struct {
 	timer         float64
 	delay         float64
 	frames        []int
+	callbacks     map[int]func()
+	onFinished    func()
 }
 
 func NewAnimation(name string, frames []int, fps float64, looped bool) *GxlAnimation {
@@ -25,15 +27,26 @@ func NewAnimation(name string, frames []int, fps float64, looped bool) *GxlAnima
 		frameIndex:    0,
 		maxFrameIndex: len(frames) - 1,
 		isLoop:        looped,
-		isFinished:    false,
-		isPaused:      false,
+		isFinished:    true,
+		isPaused:      true,
+		callbacks:     make(map[int]func()),
 	}
-	a.SetFPS(fps)
+	a.setFPS(fps)
 
 	return &a
 }
 
-func (a *GxlAnimation) SetFPS(fps float64) {
+func (a *GxlAnimation) SetCallback(frameIndex int, callback func()) *GxlAnimation {
+	a.callbacks[frameIndex] = callback
+	return a
+}
+
+func (a *GxlAnimation) SetOnFinished(callback func()) *GxlAnimation {
+	a.onFinished = callback
+	return a
+}
+
+func (a *GxlAnimation) setFPS(fps float64) {
 	a.frameRate = fps
 	a.delay = 0
 	if math.Abs(fps) > 0 {
@@ -41,37 +54,37 @@ func (a *GxlAnimation) SetFPS(fps float64) {
 	}
 }
 
-func (a *GxlAnimation) Pause() {
+func (a *GxlAnimation) pause() {
 	a.isPaused = true
 }
 
-func (a *GxlAnimation) Resume() {
+func (a *GxlAnimation) resume() {
 	a.isPaused = false
 }
 
-func (a *GxlAnimation) Stop() {
+func (a *GxlAnimation) stop() {
 	a.isFinished = true
 	a.isPaused = true
 }
 
-func (a *GxlAnimation) Reset() {
-	a.Stop()
+func (a *GxlAnimation) reset() {
+	a.stop()
 	a.frameIndex = 0
 }
 
-func (a *GxlAnimation) Restart() {
-	a.Play(true)
+func (a *GxlAnimation) restart() {
+	a.play(true)
 }
 
-func (a *GxlAnimation) GetCurrentFrame() int {
+func (a *GxlAnimation) getCurrentFrame() int {
 	return a.frames[a.frameIndex]
 }
 
-func (a *GxlAnimation) GetName() string {
+func (a *GxlAnimation) getName() string {
 	return a.name
 }
 
-func (a *GxlAnimation) Play(force bool) {
+func (a *GxlAnimation) play(force bool) {
 	if !force && !a.isFinished {
 		a.isPaused = false
 		return
@@ -82,12 +95,13 @@ func (a *GxlAnimation) Play(force bool) {
 	a.frameIndex = 0
 	a.timer = 0
 
-	// if a.isFinished {
-	// 	// OnFinish() ?
-	// }
+	callback, ok := a.callbacks[0]
+	if ok {
+		callback()
+	}
 }
 
-func (a *GxlAnimation) Update(elapsed float64) {
+func (a *GxlAnimation) update(elapsed float64) {
 	if a.isFinished || a.delay == 0 || a.isPaused {
 		return
 	}
@@ -102,9 +116,18 @@ func (a *GxlAnimation) Update(elapsed float64) {
 				a.frameIndex = 0
 			} else {
 				a.isFinished = true
+				if a.onFinished != nil {
+					a.onFinished()
+					return
+				}
 			}
 		} else {
 			a.frameIndex++
+		}
+
+		callback, ok := a.callbacks[a.frameIndex]
+		if ok {
+			callback()
 		}
 	}
 }

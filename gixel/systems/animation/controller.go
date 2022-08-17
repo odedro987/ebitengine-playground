@@ -1,10 +1,9 @@
-package systems
+package animation
 
 import (
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/odedro987/gixel-engine/gixel/animation"
 	"github.com/odedro987/gixel-engine/gixel/graphic"
 )
 
@@ -17,14 +16,14 @@ type animationRequirements interface {
 type Animation struct {
 	subject    *animationRequirements
 	graphic    *graphic.GxlGraphic
-	animations map[string]*animation.GxlAnimation
-	currAnim   *animation.GxlAnimation
+	animations map[string]*GxlAnimation
+	currAnim   *GxlAnimation
 	frameIndex int
 }
 
 func (f *Animation) Init(subject animationRequirements) {
 	f.subject = &subject
-	f.animations = make(map[string]*animation.GxlAnimation)
+	f.animations = make(map[string]*GxlAnimation)
 }
 
 // LoadAnimatedGraphic creates a new GlxGraphic from a file path
@@ -35,43 +34,44 @@ func (f *Animation) LoadAnimatedGraphic(path string, fw, fh int) {
 	*(*f.subject).H() = fh
 }
 
-func (f *Animation) AddAnimation(name string, frames []int, fps float64, looped bool) {
-	f.animations[name] = animation.NewAnimation(name, frames, fps, looped)
+func (f *Animation) AddAnimation(name string, frames []int, fps float64, looped bool) *GxlAnimation {
+	f.animations[name] = NewAnimation(name, frames, fps, looped)
+	return f.animations[name]
 }
 
 func (f *Animation) SetAnimationFPS(fps float64) {
 	if f.currAnim != nil {
-		f.currAnim.SetFPS(fps)
+		f.currAnim.setFPS(fps)
 	}
 }
 
 func (f *Animation) PauseAnimation() {
 	if f.currAnim != nil {
-		f.currAnim.Pause()
+		f.currAnim.pause()
 	}
 }
 
 func (f *Animation) ResumeAnimation() {
 	if f.currAnim != nil {
-		f.currAnim.Resume()
+		f.currAnim.resume()
 	}
 }
 
 func (f *Animation) StopAnimation() {
 	if f.currAnim != nil {
-		f.currAnim.Stop()
+		f.currAnim.stop()
 	}
 }
 
 func (f *Animation) ResetAnimation() {
 	if f.currAnim != nil {
-		f.currAnim.Reset()
+		f.currAnim.reset()
 	}
 }
 
 func (f *Animation) RestartAnimation() {
 	if f.currAnim != nil {
-		f.currAnim.Restart()
+		f.currAnim.restart()
 	}
 }
 
@@ -82,12 +82,12 @@ func (f *Animation) PlayAnimation(name string, force bool) {
 		return
 	}
 
-	if f.currAnim != nil && f.currAnim.GetName() != name {
-		f.currAnim.Reset()
+	if f.currAnim != nil && f.currAnim.getName() != name {
+		f.currAnim.reset()
 	}
 
 	f.currAnim = anim
-	f.currAnim.Play(force)
+	f.currAnim.play(force)
 }
 
 func (s *Animation) Update(elapsed float64) {
@@ -95,8 +95,8 @@ func (s *Animation) Update(elapsed float64) {
 		return
 	}
 
-	s.currAnim.Update(elapsed)
+	s.currAnim.update(elapsed)
 
-	s.frameIndex = s.currAnim.GetCurrentFrame()
+	s.frameIndex = s.currAnim.getCurrentFrame()
 	*(*s.subject).Image() = s.graphic.GetFrame(s.frameIndex)
 }

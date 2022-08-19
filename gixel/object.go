@@ -80,12 +80,16 @@ func (o *BaseGxlObject) AngleMultiplier() *float64 {
 	return &o.angleMultiplier
 }
 
+func (o *BaseGxlObject) Bounds() *math.GxlRectangle {
+	return math.NewRectangle(o.x, o.y, float64(o.w), float64(o.h))
+}
+
 func (o *BaseGxlObject) Overlaps(obj GxlObject) bool {
 	if !o.exists || !*obj.Exists() {
 		return false
 	}
 
-	return *obj.X() <= o.x+float64(o.w) && *obj.X()+float64(*obj.W()) >= o.x && *obj.Y() <= o.y+float64(o.h) && *obj.Y()+float64(*obj.H()) >= o.y
+	return o.Bounds().Overlaps(obj.Bounds())
 }
 
 type GxlObject interface {
@@ -102,5 +106,6 @@ type GxlObject interface {
 	ScaleMultiplier() *math.GxlPoint
 	Angle() *float64
 	AngleMultiplier() *float64
+	Bounds() *math.GxlRectangle
 	Overlaps(obj GxlObject) bool
 }

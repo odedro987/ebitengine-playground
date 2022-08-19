@@ -18,6 +18,7 @@ type GxlGame struct {
 	logger    *gl.GxlLogger
 	isDebug   bool // TODO: Expose
 	timescale float64
+	nextID    int
 }
 
 func NewGame(width, height int, title string, initialState GxlState, zoom int) {
@@ -29,6 +30,7 @@ func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 		zoom:      zoom,
 		isDebug:   true,
 		timescale: 1,
+		nextID:    0,
 	}
 	g.SwitchState(initialState)
 
@@ -45,6 +47,12 @@ func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 	}
 	defer func() { g.state.Destroy() }()
 
+}
+
+func (g *GxlGame) GenerateID() int {
+	id := g.nextID
+	g.nextID++
+	return id
 }
 
 // Update proceeds the game

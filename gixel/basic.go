@@ -1,9 +1,12 @@
 package gixel
 
-import "github.com/hajimehoshi/ebiten/v2"
+import (
+	"github.com/hajimehoshi/ebiten/v2"
+)
 
 type BaseGxlBasic struct {
 	game    *GxlGame
+	id      int
 	visible bool
 	exists  bool
 	// TODO: Do we want current state ref here?
@@ -11,6 +14,7 @@ type BaseGxlBasic struct {
 
 func (b *BaseGxlBasic) Init(g *GxlGame) {
 	b.game = g
+	b.id = g.GenerateID()
 	b.visible = true
 	b.exists = true
 }
@@ -23,6 +27,10 @@ func (b *BaseGxlBasic) Draw(screen *ebiten.Image) {}
 
 func (b *BaseGxlBasic) Update(elapsed float64) error {
 	return nil
+}
+
+func (b *BaseGxlBasic) GetID() int {
+	return b.id
 }
 
 func (b *BaseGxlBasic) Visible() *bool {
@@ -42,6 +50,7 @@ type GxlBasic interface {
 	Destroy()
 	Draw(screen *ebiten.Image)
 	Update(elapsed float64) error
+	GetID() int
 	Visible() *bool
 	Exists() *bool
 	Game() *GxlGame

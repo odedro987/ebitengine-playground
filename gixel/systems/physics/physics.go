@@ -4,10 +4,21 @@ import (
 	"github.com/odedro987/gixel-engine/gixel/math"
 )
 
-type physicsRequirements interface {
+type imports interface {
 	X() *float64
 	Y() *float64
 	Angle() *float64
+}
+
+type Exports interface {
+	Velocity() *math.GxlPoint
+	AngularVelocity() *float64
+	AngularAcceleration() *float64
+	AngularDrag() *float64
+	MaxAngular() *float64
+	MaxVelocity() *math.GxlPoint
+	Acceleration() *math.GxlPoint
+	Drag() *math.GxlPoint
 }
 
 type Physics struct {
@@ -19,10 +30,10 @@ type Physics struct {
 	maxVelocity         math.GxlPoint
 	drag                math.GxlPoint
 	acceleration        math.GxlPoint
-	subject             *physicsRequirements
+	subject             *imports
 }
 
-func (p *Physics) Init(subject physicsRequirements) {
+func (p *Physics) Init(subject imports) {
 	p.subject = &subject
 }
 

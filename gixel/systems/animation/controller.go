@@ -7,96 +7,108 @@ import (
 	"github.com/odedro987/gixel-engine/gixel/graphic"
 )
 
-type animationRequirements interface {
+type imports interface {
 	Image() **ebiten.Image
 	W() *int
 	H() *int
 }
 
 type Animation struct {
-	subject    *animationRequirements
+	subject    *imports
 	graphic    *graphic.GxlGraphic
 	animations map[string]*GxlAnimation
 	currAnim   *GxlAnimation
 	frameIndex int
 }
 
-func (f *Animation) Init(subject animationRequirements) {
-	f.subject = &subject
-	f.animations = make(map[string]*GxlAnimation)
+type Exports interface {
+	LoadAnimatedGraphic(path string, fw, fh int)
+	AddAnimation(name string, frames []int, fps float64, looped bool) *GxlAnimation
+	SetAnimationFPS(fps float64)
+	PauseAnimation()
+	ResumeAnimation()
+	StopAnimation()
+	ResetAnimation()
+	RestartAnimation()
+	PlayAnimation(name string, force bool)
+}
+
+func (a *Animation) Init(subject imports) {
+	a.subject = &subject
+	a.animations = make(map[string]*GxlAnimation)
 }
 
 // LoadAnimatedGraphic creates a new GlxGraphic from a file path
-// and sets it as the sprite's graphic.
-func (f *Animation) LoadAnimatedGraphic(path string, fw, fh int) {
-	f.graphic = graphic.LoadAnimatedGraphic(path, fw, fh)
-	*(*f.subject).W() = fw
-	*(*f.subject).H() = fh
+// and sets it as the sprite'a graphic.
+func (a *Animation) LoadAnimatedGraphic(path string, fw, fh int) {
+	a.graphic = graphic.LoadAnimatedGraphic(path, fw, fh)
+	*(*a.subject).W() = fw
+	*(*a.subject).H() = fh
 }
 
-func (f *Animation) AddAnimation(name string, frames []int, fps float64, looped bool) *GxlAnimation {
-	f.animations[name] = NewAnimation(name, frames, fps, looped)
-	return f.animations[name]
+func (a *Animation) AddAnimation(name string, frames []int, fps float64, looped bool) *GxlAnimation {
+	a.animations[name] = NewAnimation(name, frames, fps, looped)
+	return a.animations[name]
 }
 
-func (f *Animation) SetAnimationFPS(fps float64) {
-	if f.currAnim != nil {
-		f.currAnim.setFPS(fps)
+func (a *Animation) SetAnimationFPS(fps float64) {
+	if a.currAnim != nil {
+		a.currAnim.setFPS(fps)
 	}
 }
 
-func (f *Animation) PauseAnimation() {
-	if f.currAnim != nil {
-		f.currAnim.pause()
+func (a *Animation) PauseAnimation() {
+	if a.currAnim != nil {
+		a.currAnim.pause()
 	}
 }
 
-func (f *Animation) ResumeAnimation() {
-	if f.currAnim != nil {
-		f.currAnim.resume()
+func (a *Animation) ResumeAnimation() {
+	if a.currAnim != nil {
+		a.currAnim.resume()
 	}
 }
 
-func (f *Animation) StopAnimation() {
-	if f.currAnim != nil {
-		f.currAnim.stop()
+func (a *Animation) StopAnimation() {
+	if a.currAnim != nil {
+		a.currAnim.stop()
 	}
 }
 
-func (f *Animation) ResetAnimation() {
-	if f.currAnim != nil {
-		f.currAnim.reset()
+func (a *Animation) ResetAnimation() {
+	if a.currAnim != nil {
+		a.currAnim.reset()
 	}
 }
 
-func (f *Animation) RestartAnimation() {
-	if f.currAnim != nil {
-		f.currAnim.restart()
+func (a *Animation) RestartAnimation() {
+	if a.currAnim != nil {
+		a.currAnim.restart()
 	}
 }
 
-func (f *Animation) PlayAnimation(name string, force bool) {
-	anim, ok := f.animations[name]
+func (a *Animation) PlayAnimation(name string, force bool) {
+	anim, ok := a.animations[name]
 	if !ok {
 		log.Printf("no animation called %s\n", name)
 		return
 	}
 
-	if f.currAnim != nil && f.currAnim.getName() != name {
-		f.currAnim.reset()
+	if a.currAnim != nil && a.currAnim.getName() != name {
+		a.currAnim.reset()
 	}
 
-	f.currAnim = anim
-	f.currAnim.play(force)
+	a.currAnim = anim
+	a.currAnim.play(force)
 }
 
-func (s *Animation) Update(elapsed float64) {
-	if s.currAnim == nil || s.graphic == nil {
+func (a *Animation) Update(elapsed float64) {
+	if a.currAnim == nil || a.graphic == nil {
 		return
 	}
 
-	s.currAnim.update(elapsed)
+	a.currAnim.update(elapsed)
 
-	s.frameIndex = s.currAnim.getCurrentFrame()
-	*(*s.subject).Image() = s.graphic.GetFrame(s.frameIndex)
+	a.frameIndex = a.currAnim.getCurrentFrame()
+	*(*a.subject).Image() = a.graphic.GetFrame(a.frameIndex)
 }

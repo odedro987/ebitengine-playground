@@ -5,18 +5,23 @@ import (
 	"github.com/odedro987/gixel-engine/gixel/math"
 )
 
-type flippingRequirements interface {
+type imports interface {
 	ScaleMultiplier() *math.GxlPoint
 	AngleMultiplier() *float64
 }
 
+type Exports interface {
+	Facing() *gixel.GxlDirection
+	SetFacingFlip(dir gixel.GxlDirection, flipX, flipY bool)
+}
+
 type Flipping struct {
-	subject    *flippingRequirements
+	subject    *imports
 	facingFlip map[gixel.GxlDirection]math.GxlPoint
 	facing     gixel.GxlDirection
 }
 
-func (f *Flipping) Init(subject flippingRequirements) {
+func (f *Flipping) Init(subject imports) {
 	f.subject = &subject
 	f.facingFlip = make(map[gixel.GxlDirection]math.GxlPoint)
 	f.facing = gixel.None

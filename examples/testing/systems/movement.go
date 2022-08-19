@@ -6,7 +6,7 @@ import (
 	"github.com/odedro987/gixel-engine/gixel/math"
 )
 
-type movementRequirements interface {
+type imports interface {
 	Velocity() *math.GxlPoint
 	MaxVelocity() *math.GxlPoint
 	Acceleration() *math.GxlPoint
@@ -21,10 +21,10 @@ type Movement struct {
 	isMoving  bool
 	moveAngle float64
 	animName  string
-	subject   *movementRequirements
+	subject   *imports
 }
 
-func (p *Movement) Init(subject movementRequirements) {
+func (p *Movement) Init(subject imports) {
 	p.subject = &subject
 	p.canMove = true
 	p.isMoving = false

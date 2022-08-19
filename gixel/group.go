@@ -35,6 +35,10 @@ func (g *BaseGxlGroup) Init(game *GxlGame) {
 }
 
 func (g *BaseGxlGroup) Add(object GxlBasic) *GxlBasic {
+	if g.game == nil {
+		log.Fatal("group must be initialized before adding members")
+	}
+
 	freeSlotIdx := -1
 	for idx, member := range g.members {
 		if member == &object {

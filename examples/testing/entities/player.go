@@ -30,9 +30,9 @@ func (p *Player) Init(game *gixel.GxlGame) {
 	p.BaseGxlSprite.Init(game)
 
 	p.Flipping.Init(p)
+	p.Collision.Init(p)
 	p.Physics.Init(p)
 	p.Movement.Init(p)
-	p.Collision.Init(p)
 
 	p.MakeGraphic(16, 16, color.White)
 }

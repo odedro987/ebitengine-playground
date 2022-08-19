@@ -25,8 +25,8 @@ func NewWall(x, y float64) *Wall {
 func (w *Wall) Init(game *gixel.GxlGame) {
 	w.BaseGxlSprite.Init(game)
 
-	w.Physics.Init(w)
 	w.Collision.Init(w)
+	w.Physics.Init(w)
 
 	*w.Immovable() = true
 

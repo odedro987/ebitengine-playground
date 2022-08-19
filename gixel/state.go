@@ -1,45 +1,63 @@
 package gixel
 
 import (
-	"github.com/solarlune/resolv"
+	"math"
+
+	"github.com/odedro987/gixel-engine/gixel/systems/collision"
 )
 
 type CallbackFunc = func(obj1, obj2 *GxlObject)
 
 type BaseGxlState struct {
 	BaseGxlGroup
-	space        *resolv.Space
-	spaceObjects map[GxlObject]*resolv.Object
-	// TODO: Add collision manager
 }
 
-func (s *BaseGxlState) Init(game *GxlGame) {
-	s.BaseGxlGroup.Init(game)
-	// TODO: Change cell size to tiles
-	s.space = resolv.NewSpace(game.width, game.height, 16, 16)
-	s.spaceObjects = make(map[GxlObject]*resolv.Object)
+type CollidableObject interface {
+	GxlObject
+	collision.Exports
 }
 
-// func (s *BaseGxlState) alignObjectsInSpace(objs ...GxlObject) {
-// 	for _, obj := range objs {
-// 		_, ok := s.spaceObjects[obj]
-// 		x, y := obj.GetPosition()
-// 		w, h := obj.GetSize()
-// 		if !ok {
-// 			s.spaceObjects[obj] = resolv.NewObject(x, y, float64(w), float64(h))
-// 			s.space.Add(s.spaceObjects[obj])
-// 			continue
-// 		}
+// TODO: Figure out small delta collisions (1 pixel difference)
+func (s *BaseGxlState) CollideObjects(obj1, obj2 CollidableObject) {
+	if !obj1.Overlaps(obj2) {
+		return
+	}
 
-// 		if *obj.Static() {
-// 			continue
-// 		}
+	overlapX := computeOverlapX(obj1, obj2)
+	overlapY := computeOverlapY(obj1, obj2)
 
-// 		s.spaceObjects[obj].X, s.spaceObjects[obj].Y = x, y
-// 		s.spaceObjects[obj].W, s.spaceObjects[obj].H = float64(w), float64(h)
-// 		s.spaceObjects[obj].Update()
-// 	}
-// }
+	if (!*obj1.Immovable() && !*obj2.Immovable()) || *obj1.Immovable() {
+		*obj2.X() -= overlapX
+		*obj2.Y() -= overlapY
+	} else if *obj2.Immovable() {
+		*obj1.X() -= overlapX
+		*obj1.Y() -= overlapY
+	}
+}
+
+func (s *BaseGxlState) CollideObjectGroup(obj CollidableObject, grp GxlGroup) {
+	grp.Range(func(idx int, value *GxlBasic) bool {
+		cobj, ok := (*value).(CollidableObject)
+		if !ok {
+			return true
+		}
+
+		s.CollideObjects(obj, cobj)
+		return true
+	})
+}
+
+func (s *BaseGxlState) CollideGroups(grp1, grp2 GxlGroup) {
+	grp1.Range(func(idx int, value *GxlBasic) bool {
+		cobj, ok := (*value).(CollidableObject)
+		if !ok {
+			return true
+		}
+
+		s.OverlapsObjectGroup(cobj, grp2)
+		return true
+	})
+}
 
 func (s *BaseGxlState) OverlapsObjectGroup(obj GxlObject, grp GxlGroup, callbacks ...CallbackFunc) bool {
 	overlapped := false
@@ -78,6 +96,72 @@ func (s *BaseGxlState) OverlapsGroups(grp1, grp2 GxlGroup, callbacks ...Callback
 	})
 
 	return overlapped
+}
+
+func computeOverlapX(obj1, obj2 CollidableObject) float64 {
+	// calculate how much overlap
+	delta1 := *obj1.X() - obj1.LastX()
+	delta2 := *obj2.X() - obj2.LastX()
+
+	if delta1 == delta2 {
+		return 0
+	}
+
+	delta1Abs := math.Abs(delta1)
+	delta2Abs := math.Abs(delta2)
+	maxOverlap := delta1Abs + delta2Abs + 4
+	overlap := 0.0
+
+	// TODO: Figure out if necessary
+	// rect1 := gm.NewRectangle(*obj1.X()-math.Max(0.0, delta1), obj1.LastY(), float64(*obj1.W())+delta1Abs, float64(*obj1.H()))
+	// rect2 := gm.NewRectangle(*obj2.X()-math.Max(0.0, delta2), obj2.LastY(), float64(*obj2.W())+delta2Abs, float64(*obj2.H()))
+
+	// if !rect1.Overlaps(rect2) {
+	// 	return 0
+	// }
+
+	if delta1 > delta2 {
+		overlap = *obj1.X() + float64(*obj1.W()) - *obj2.X()
+		if overlap > maxOverlap {
+			return 0
+		}
+	} else if delta1 < delta2 {
+		overlap = *obj1.X() - float64(*obj2.W()) - *obj2.X()
+		if -overlap > maxOverlap {
+			return 0
+		}
+	}
+
+	return overlap
+}
+
+func computeOverlapY(obj1, obj2 CollidableObject) float64 {
+	// calculate how much overlap
+	delta1 := *obj1.Y() - obj1.LastY()
+	delta2 := *obj2.Y() - obj2.LastY()
+
+	if delta1 == delta2 {
+		return 0
+	}
+
+	delta1Abs := math.Abs(delta1)
+	delta2Abs := math.Abs(delta2)
+	maxOverlap := delta1Abs + delta2Abs + 4
+	overlap := 0.0
+
+	if delta1 > delta2 {
+		overlap = *obj1.Y() + float64(*obj1.H()) - *obj2.Y()
+		if overlap > maxOverlap {
+			return 0
+		}
+	} else if delta1 < delta2 {
+		overlap = *obj1.Y() - float64(*obj2.H()) - *obj2.Y()
+		if -overlap > maxOverlap {
+			return 0
+		}
+	}
+
+	return overlap
 }
 
 type GxlState interface {

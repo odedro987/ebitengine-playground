@@ -18,6 +18,8 @@ type PlayState struct {
 	scoreText        gixel.GxlText
 	paddles          gixel.GxlGroup
 	ball             *Ball
+	startTimer       *gixel.GxlTimer
+	timerText        gixel.GxlText
 }
 
 func (s *PlayState) Init(game *gixel.GxlGame) {
@@ -42,15 +44,75 @@ func (s *PlayState) Init(game *gixel.GxlGame) {
 
 	s.Add(s.scoreText)
 
+	s.timerText = gixel.NewText(0, 0, "0", f.GetPreset(128))
+	*s.timerText.Visible() = false
+	countdown := []string{"2", "1", "START"}
+	s.Add(s.timerText)
+
+	s.startTimer = gixel.NewIterationTimer(4, 0.5).
+		SetCallback(func(totalElapsed float64, iteration int) {
+			if iteration-1 < len(countdown) {
+				s.timerText.SetText(countdown[iteration-1])
+				s.timerText.SetPosition(GAME_WIDTH/2-float64(*s.timerText.W()/2), GAME_HEIGHT/2-float64(*s.timerText.H()/2))
+			} else {
+				*s.timerText.Visible() = false
+				*(*s.ball).Visible() = true
+				*(*s.ball).Active() = true
+			}
+		}).
+		SetOnStart(func(totalElapsed float64, iteration int) {
+			s.ball.Spawn()
+			*(*s.ball).Visible() = false
+			*(*s.ball).Active() = false
+			*s.timerText.Visible() = true
+			s.timerText.SetText("3")
+			s.timerText.SetPosition(GAME_WIDTH/2-float64(*s.timerText.W()/2), GAME_HEIGHT/2-float64(*s.timerText.H()/2))
+		})
+	s.startTimer.Start()
+
 }
 
 func (s *PlayState) Update(elapsed float64) error {
+	*s.Game().Timescale() = 1
+
 	err := s.BaseGxlState.Update(elapsed)
 	if err != nil {
 		return err
 	}
 
-	s.OverlapsObjectGroup(s.ball, s.paddles, func(obj1, obj2 *gixel.GxlObject) { s.ball.FlipHorizontal() })
+	s.startTimer.Update(elapsed)
+
+	if *s.ball.X() > GAME_WIDTH-float64(*s.ball.W()) {
+		s.startTimer.Restart()
+		s.score2++
+	} else if *s.ball.X() < 0 {
+		s.startTimer.Restart()
+		s.score1++
+	}
+
+	checkCollision := true
+	ballX := *s.ball.X()
+	// Check if ball is in dead zone
+	if *s.ball.Visible() && (ballX < DISTANCE_FROM_WALL+35 || ballX+float64(*s.ball.W()) > GAME_WIDTH-DISTANCE_FROM_WALL-35) {
+		*s.Game().Timescale() = 0.25
+		checkCollision = false
+	}
+
+	// Check collision only outside of dead zone
+	if checkCollision {
+		s.OverlapsObjectGroup(s.ball, s.paddles, func(obj1, obj2 *gixel.GxlObject) {
+			dir := 1.0
+			if *(*obj1).X() < GAME_WIDTH/2 {
+				*(*obj1).X() = DISTANCE_FROM_WALL + 48 + 1
+			} else {
+				*(*obj1).X() = GAME_WIDTH - DISTANCE_FROM_WALL - 48 - 32 - 1
+				dir = -1
+			}
+			halfPaddle := float64(*(*obj2).H() / 2)
+			relativeY := (*(*obj2).Y() + halfPaddle) - (*(*obj1).Y())
+			s.ball.FlipHorizontal(relativeY/halfPaddle, dir)
+		})
+	}
 
 	s.scoreText.SetText(fmt.Sprintf("%d - %d", s.score1, s.score2))
 	s.scoreText.SetPosition(GAME_WIDTH/2-float64(*s.scoreText.W()/2), 64)
@@ -59,10 +121,6 @@ func (s *PlayState) Update(elapsed float64) error {
 		fullscreen := ebiten.IsFullscreen()
 		fullscreen = !fullscreen
 		ebiten.SetFullscreen(fullscreen)
-	}
-
-	if inpututil.IsKeyJustPressed(ebiten.KeyN) {
-		*s.Game().Timescale() = 0.5
 	}
 
 	return nil

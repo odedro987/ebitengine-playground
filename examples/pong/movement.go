@@ -7,6 +7,8 @@ import (
 
 type imports interface {
 	Velocity() *math.GxlPoint
+	Y() *float64
+	H() *int
 }
 
 type Movement struct {
@@ -17,7 +19,7 @@ type Movement struct {
 
 func (p *Movement) Init(subject imports) {
 	p.subject = &subject
-	p.speed = 500
+	p.speed = 800
 }
 
 func (p *Movement) Update(elapsed float64) {
@@ -34,11 +36,14 @@ func (p *Movement) keyboardControl() {
 
 	vel := 0.0
 
-	if up {
+	subjY := *(*p.subject).Y()
+	subjH := float64(*(*p.subject).H())
+
+	if up && subjY > 0 {
 		vel += -p.speed
 	}
 
-	if down {
+	if down && subjY < GAME_HEIGHT-subjH {
 		vel += p.speed
 	}
 

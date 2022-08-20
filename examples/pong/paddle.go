@@ -3,14 +3,12 @@ package main
 import (
 	"image/color"
 
-	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/odedro987/gixel-engine/gixel"
 	"github.com/odedro987/gixel-engine/gixel/systems/physics"
 )
 
 type Paddle struct {
 	gixel.BaseGxlSprite
-	KeyUp, KeyDown ebiten.Key
 	// Systems
 	physics.Physics
 	Movement

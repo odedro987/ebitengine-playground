@@ -64,7 +64,12 @@ func (b *Ball) FlipVertical() {
 
 func (b *Ball) FlipHorizontal(normal float64, dir float64) {
 	b.Velocity().X = BALL_SPEED * math.Cos((MAX_ANGLE*(math.Pi/180))*normal) * dir
-	b.Velocity().Y = BALL_SPEED * -math.Sin((MAX_ANGLE*(math.Pi/180))*normal) * dir
+
+	if dir == 1 {
+		b.Velocity().Y = BALL_SPEED * -math.Sin((MAX_ANGLE*(math.Pi/180))*normal)
+	} else {
+		b.Velocity().Y = BALL_SPEED * math.Sin((MAX_ANGLE*(math.Pi/180))*normal) * dir
+	}
 }
 
 func (b *Ball) Update(elapsed float64) error {

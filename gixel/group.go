@@ -8,7 +8,7 @@ import (
 
 type BaseGxlGroup struct {
 	BaseGxlBasic
-	members       []*GxlBasic
+	members       []GxlBasic
 	maxSize       int
 	recycleMarker func() int
 }
@@ -26,22 +26,22 @@ func NewGroup(maxSize int) *BaseGxlGroup {
 func (g *BaseGxlGroup) Init(game *GxlGame) {
 	g.BaseGxlBasic.Init(game)
 	if g.maxSize == 0 {
-		g.members = make([]*GxlBasic, 0)
+		g.members = make([]GxlBasic, 0)
 	} else {
-		g.members = make([]*GxlBasic, 0, g.maxSize)
+		g.members = make([]GxlBasic, 0, g.maxSize)
 	}
 
 	g.recycleMarker = cyclicCounter(0, g.maxSize-1)
 }
 
-func (g *BaseGxlGroup) Add(object GxlBasic) *GxlBasic {
+func (g *BaseGxlGroup) Add(object GxlBasic) GxlBasic {
 	if g.game == nil {
 		log.Fatal("group must be initialized before adding members")
 	}
 
 	freeSlotIdx := -1
 	for idx, member := range g.members {
-		if member == &object {
+		if member == object {
 			log.Println("object already exists in group")
 			return nil
 		}
@@ -52,9 +52,9 @@ func (g *BaseGxlGroup) Add(object GxlBasic) *GxlBasic {
 	}
 
 	if freeSlotIdx != -1 {
-		g.members[freeSlotIdx] = &object
+		g.members[freeSlotIdx] = object
 		object.Init(g.game)
-		return &object
+		return object
 	}
 
 	if g.maxSize > 0 && len(g.members) >= g.maxSize {
@@ -62,14 +62,14 @@ func (g *BaseGxlGroup) Add(object GxlBasic) *GxlBasic {
 		return nil
 	}
 
-	g.members = append(g.members, &object)
+	g.members = append(g.members, object)
 	object.Init(g.game)
-	return &object
+	return object
 }
 
-func (g *BaseGxlGroup) getFirstAvailable() *GxlBasic {
+func (g *BaseGxlGroup) getFirstAvailable() GxlBasic {
 	for _, member := range g.members {
-		if member != nil && !*(*member).Exists() {
+		if member != nil && !*(member).Exists() {
 			return member
 		}
 	}
@@ -77,13 +77,13 @@ func (g *BaseGxlGroup) getFirstAvailable() *GxlBasic {
 	return nil
 }
 
-func (g *BaseGxlGroup) Recycle(factory func() GxlBasic) *GxlBasic {
+func (g *BaseGxlGroup) Recycle(factory func() GxlBasic) GxlBasic {
 	// Case group has limit
 	if g.maxSize > 0 {
 		if len(g.members) < g.maxSize {
 			obj := factory()
 			g.Add(obj)
-			return &obj
+			return obj
 		} else {
 			// On each recycle returns a ref to a member in a cyclic order
 			return g.members[g.recycleMarker()]
@@ -97,11 +97,11 @@ func (g *BaseGxlGroup) Recycle(factory func() GxlBasic) *GxlBasic {
 
 		obj := factory()
 		g.Add(obj)
-		return &obj
+		return obj
 	}
 }
 
-func (g *BaseGxlGroup) Remove(object *GxlBasic) *GxlBasic {
+func (g *BaseGxlGroup) Remove(object GxlBasic) GxlBasic {
 	for idx, member := range g.members {
 		if member == object {
 			g.members[idx] = nil
@@ -116,7 +116,7 @@ func (g *BaseGxlGroup) Length() int {
 	return len(g.members)
 }
 
-func (g *BaseGxlGroup) Range(f func(idx int, value *GxlBasic) bool) {
+func (g *BaseGxlGroup) Range(f func(idx int, value GxlBasic) bool) {
 	for idx, m := range g.members {
 		if m == nil {
 			continue
@@ -130,16 +130,16 @@ func (g *BaseGxlGroup) Range(f func(idx int, value *GxlBasic) bool) {
 
 func (g *BaseGxlGroup) Draw(screen *ebiten.Image) {
 	for _, m := range g.members {
-		if m != nil && *(*m).Exists() && *(*m).Visible() {
-			(*m).Draw(screen)
+		if m != nil && *m.Exists() && *m.Visible() {
+			m.Draw(screen)
 		}
 	}
 }
 
 func (g *BaseGxlGroup) Update(elapsed float64) error {
 	for _, m := range g.members {
-		if m != nil && *(*m).Exists() {
-			err := (*m).Update(elapsed)
+		if m != nil && *m.Exists() {
+			err := m.Update(elapsed)
 			if err != nil {
 				return err
 			}
@@ -151,7 +151,7 @@ func (g *BaseGxlGroup) Update(elapsed float64) error {
 func (g *BaseGxlGroup) Destroy() {
 	for _, m := range g.members {
 		if m != nil {
-			(*m).Destroy()
+			m.Destroy()
 		}
 	}
 }
@@ -171,10 +171,10 @@ func cyclicCounter(min, max int) func() int {
 
 type GxlGroup interface {
 	GxlBasic
-	Add(object GxlBasic) *GxlBasic
-	getFirstAvailable() *GxlBasic
+	Add(object GxlBasic) GxlBasic
+	getFirstAvailable() GxlBasic
 	Length() int
-	Range(f func(idx int, value *GxlBasic) bool)
-	Recycle(factory func() GxlBasic) *GxlBasic
-	Remove(object *GxlBasic) *GxlBasic
+	Range(f func(idx int, value GxlBasic) bool)
+	Recycle(factory func() GxlBasic) GxlBasic
+	Remove(object GxlBasic) GxlBasic
 }

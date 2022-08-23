@@ -5,7 +5,6 @@ import (
 
 	"github.com/odedro987/gixel-engine/examples/testing/systems"
 	"github.com/odedro987/gixel-engine/gixel"
-	"github.com/odedro987/gixel-engine/gixel/systems/collision"
 	"github.com/odedro987/gixel-engine/gixel/systems/flipping"
 	"github.com/odedro987/gixel-engine/gixel/systems/physics"
 )
@@ -15,7 +14,6 @@ type Player struct {
 	// Systems
 	flipping.Flipping
 	physics.Physics
-	collision.Collision
 	systems.Movement
 }
 
@@ -30,7 +28,6 @@ func (p *Player) Init(game *gixel.GxlGame) {
 	p.BaseGxlSprite.Init(game)
 
 	p.Flipping.Init(p)
-	p.Collision.Init(p)
 	p.Physics.Init(p)
 	p.Movement.Init(p)
 
@@ -44,7 +41,6 @@ func (p *Player) Update(elapsed float64) error {
 	}
 
 	p.Flipping.Update()
-	p.Collision.Update(elapsed)
 	p.Physics.Update(elapsed)
 	p.Movement.Update(elapsed)
 

@@ -5,16 +5,22 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/odedro987/gixel-engine/examples/testing/entities"
 	"github.com/odedro987/gixel-engine/gixel"
+	"github.com/odedro987/gixel-engine/gixel/systems/collision"
 )
 
 type PlayState struct {
 	gixel.BaseGxlState
 	player *entities.Player
 	walls  *gixel.BaseGxlGroup
+	wall   *entities.Wall
+	//Systems
+	collision.Collision
 }
 
 func (s *PlayState) Init(game *gixel.GxlGame) {
 	s.BaseGxlState.Init(game)
+
+	s.Collision.Init(s)
 
 	s.walls = gixel.NewGroup(0)
 	s.Add(s.walls)
@@ -23,6 +29,10 @@ func (s *PlayState) Init(game *gixel.GxlGame) {
 			return entities.NewWall(float64(100+32*i), 150+2*i)
 		})
 	}
+
+	s.wall = entities.NewWall(25, 200)
+	s.Add(s.wall)
+	s.wall.Color().R = 255
 
 	s.player = entities.NewPlayer(100, 100)
 	s.Add(s.player)
@@ -39,7 +49,11 @@ func (s *PlayState) Update(elapsed float64) error {
 		return err
 	}
 
+	s.CollideObjects(s.player, s.wall)
 	s.CollideObjectGroup(s.player, s.walls)
+	s.CollideGroups(s.walls, s.walls)
+
+	s.Collision.Update(elapsed)
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyF) {
 		fullscreen := ebiten.IsFullscreen()

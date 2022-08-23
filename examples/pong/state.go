@@ -4,9 +4,11 @@ import (
 	"fmt"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/odedro987/gixel-engine/gixel"
 	"github.com/odedro987/gixel-engine/gixel/font"
+	"github.com/odedro987/gixel-engine/gixel/math"
 )
 
 const DISTANCE_FROM_WALL = 64
@@ -53,7 +55,7 @@ func (s *PlayState) Init(game *gixel.GxlGame) {
 		SetCallback(func(totalElapsed float64, iteration int) {
 			if iteration-1 < len(countdown) {
 				s.timerText.SetText(countdown[iteration-1])
-				s.timerText.SetPosition(GAME_WIDTH/2-float64(*s.timerText.W()/2), GAME_HEIGHT/2-float64(*s.timerText.H()/2))
+				s.timerText.SetScreenPosition(math.NewPoint(0.5, 0.5))
 			} else {
 				*s.timerText.Visible() = false
 				*(*s.ball).Visible() = true
@@ -66,10 +68,17 @@ func (s *PlayState) Init(game *gixel.GxlGame) {
 			*(*s.ball).Active() = false
 			*s.timerText.Visible() = true
 			s.timerText.SetText("3")
-			s.timerText.SetPosition(GAME_WIDTH/2-float64(*s.timerText.W()/2), GAME_HEIGHT/2-float64(*s.timerText.H()/2))
+			s.timerText.SetScreenPosition(math.NewPoint(0.5, 0.5))
+
 		})
 	s.startTimer.Start()
 
+}
+
+func (s *PlayState) Draw(screen *ebiten.Image) {
+	s.BaseGxlState.Draw(screen)
+
+	ebitenutil.DebugPrint(screen, fmt.Sprintf("%f", ebiten.CurrentTPS()))
 }
 
 func (s *PlayState) Update(elapsed float64) error {
@@ -115,7 +124,7 @@ func (s *PlayState) Update(elapsed float64) error {
 	}
 
 	s.scoreText.SetText(fmt.Sprintf("%d - %d", s.score1, s.score2))
-	s.scoreText.SetPosition(GAME_WIDTH/2-float64(*s.scoreText.W()/2), 64)
+	s.scoreText.SetScreenPosition(math.NewPoint(0.5, 0.1))
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyF) {
 		fullscreen := ebiten.IsFullscreen()

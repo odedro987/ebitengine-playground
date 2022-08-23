@@ -9,28 +9,30 @@ import (
 )
 
 type GxlGame struct {
-	width     int
-	height    int
-	title     string
-	lastFrame time.Time
-	state     GxlState
-	zoom      int
-	logger    *gl.GxlLogger
-	isDebug   bool // TODO: Expose
-	timescale float64
-	nextID    int
+	width       int
+	height      int
+	title       string
+	lastFrame   time.Time
+	state       GxlState
+	zoom        int
+	logger      *gl.GxlLogger
+	isDebug     bool // TODO: Expose
+	timescale   float64
+	nextID      int
+	stateLoaded bool
 }
 
 func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 	g := GxlGame{
-		width:     width,
-		height:    height,
-		title:     title,
-		lastFrame: time.Now(),
-		zoom:      zoom,
-		isDebug:   true,
-		timescale: 1,
-		nextID:    0,
+		width:       width,
+		height:      height,
+		title:       title,
+		lastFrame:   time.Now(),
+		zoom:        zoom,
+		isDebug:     true,
+		timescale:   1,
+		nextID:      0,
+		stateLoaded: false,
 	}
 	g.SwitchState(initialState)
 
@@ -55,9 +57,21 @@ func (g *GxlGame) GenerateID() int {
 	return id
 }
 
+func (g *GxlGame) W() int {
+	return g.width
+}
+
+func (g *GxlGame) H() int {
+	return g.height
+}
+
 // Update proceeds the game
 // Update is called every tick (1/60 [s] by default).
 func (g *GxlGame) Update() error {
+	if !g.stateLoaded {
+		return nil
+	}
+
 	// TODO: Figure out what to do with TPS
 	elapsed := 1.0 / float64(ebiten.MaxTPS())
 
@@ -72,6 +86,10 @@ func (g *GxlGame) Update() error {
 // Draw draws the game screen.
 // Draw is called every frame (typically 1/60[s] for 60Hz display).
 func (g *GxlGame) Draw(screen *ebiten.Image) {
+	if !g.stateLoaded {
+		return
+	}
+
 	g.state.Draw(screen)
 	if g.isDebug {
 		g.logger.Draw(screen)
@@ -94,9 +112,10 @@ func (g *GxlGame) SwitchState(nextState GxlState) {
 	if g.state != nil {
 		g.state.Destroy()
 	}
-
+	g.stateLoaded = false
 	g.state = nextState
 	g.state.Init(g)
+	g.stateLoaded = true
 }
 
 func (g *GxlGame) Timescale() *float64 {

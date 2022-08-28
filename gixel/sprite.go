@@ -72,6 +72,7 @@ func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
 	s.drawOpts.GeoM.Translate(float64(w/2), float64(h/2))
 	s.drawOpts.GeoM.Translate(s.x, s.y)
 	// // TODO: Add color for tinting/etc
+	s.drawOpts.ColorM.Reset()
 	s.drawOpts.ColorM.ScaleWithColor(s.color)
 
 	screen.DrawImage(s.img, s.drawOpts)

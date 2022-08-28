@@ -7,6 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/odedro987/gixel-engine/gixel/font"
+	"github.com/odedro987/gixel-engine/gixel/graphic"
 	"github.com/odedro987/gixel-engine/gixel/math"
 )
 
@@ -58,8 +59,8 @@ func (t *BaseGxlText) updateGraphic() {
 	p := rect.Size()
 	t.w, t.h = p.X, p.Y
 
-	t.img = ebiten.NewImage(t.w, t.h)
-	text.Draw(t.img, t.text, t.fontPreset.GetFace(), -rect.Min.X, -rect.Min.Y, color.White)
+	t.graphic = graphic.LoadGraphicFromImage(ebiten.NewImage(t.w, t.h))
+	text.Draw(t.graphic.GetCurrentFrame(), t.text, t.fontPreset.GetFace(), -rect.Min.X, -rect.Min.Y, color.White)
 
 	if t.screenPos == nil {
 		return

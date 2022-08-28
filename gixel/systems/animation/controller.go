@@ -3,26 +3,23 @@ package animation
 import (
 	"log"
 
-	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/odedro987/gixel-engine/gixel/graphic"
 )
 
 type imports interface {
-	Image() **ebiten.Image
+	Graphic() *graphic.GxlGraphic
 	W() *int
 	H() *int
 }
 
 type Animation struct {
 	subject    *imports
-	graphic    *graphic.GxlGraphic
 	animations map[string]*GxlAnimation
 	currAnim   *GxlAnimation
 	frameIndex int
 }
 
 type Exports interface {
-	LoadAnimatedGraphic(path string, fw, fh int)
 	AddAnimation(name string, frames []int, fps float64, looped bool) *GxlAnimation
 	SetAnimationFPS(fps float64)
 	PauseAnimation()
@@ -36,14 +33,6 @@ type Exports interface {
 func (a *Animation) Init(subject imports) {
 	a.subject = &subject
 	a.animations = make(map[string]*GxlAnimation)
-}
-
-// LoadAnimatedGraphic creates a new GlxGraphic from a file path
-// and sets it as the sprite'a graphic.
-func (a *Animation) LoadAnimatedGraphic(path string, fw, fh int) {
-	a.graphic = graphic.LoadAnimatedGraphic(path, fw, fh)
-	*(*a.subject).W() = fw
-	*(*a.subject).H() = fh
 }
 
 func (a *Animation) AddAnimation(name string, frames []int, fps float64, looped bool) *GxlAnimation {
@@ -103,12 +92,12 @@ func (a *Animation) PlayAnimation(name string, force bool) {
 }
 
 func (a *Animation) Update(elapsed float64) {
-	if a.currAnim == nil || a.graphic == nil {
+	if a.currAnim == nil || (*a.subject).Graphic() == nil {
 		return
 	}
 
 	a.currAnim.update(elapsed)
 
 	a.frameIndex = a.currAnim.getCurrentFrame()
-	*(*a.subject).Image() = a.graphic.GetFrame(a.frameIndex)
+	(*a.subject).Graphic().SetCurrentFrameIdx(a.frameIndex)
 }

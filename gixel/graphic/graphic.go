@@ -11,7 +11,8 @@ import (
 )
 
 type GxlGraphic struct {
-	frames []*ebiten.Image
+	currentFrameIdx int
+	frames          []*ebiten.Image
 }
 
 // MakeGraphic creates a new ebiten.Image fills it with a given color.
@@ -22,7 +23,8 @@ func MakeGraphic(w, h int, c color.Color) *GxlGraphic {
 	img.Fill(c)
 
 	return &GxlGraphic{
-		frames: []*ebiten.Image{img},
+		currentFrameIdx: 0,
+		frames:          []*ebiten.Image{img},
 	}
 }
 
@@ -37,7 +39,15 @@ func LoadGraphic(path string) *GxlGraphic {
 	}
 
 	return &GxlGraphic{
-		frames: []*ebiten.Image{img},
+		currentFrameIdx: 0,
+		frames:          []*ebiten.Image{img},
+	}
+}
+
+func LoadGraphicFromImage(img *ebiten.Image) *GxlGraphic {
+	return &GxlGraphic{
+		currentFrameIdx: 0,
+		frames:          []*ebiten.Image{img},
 	}
 }
 
@@ -78,6 +88,17 @@ func (g *GxlGraphic) GetFrame(idx int) *ebiten.Image {
 		log.Panicln("index out of bounds")
 	}
 	return g.frames[idx]
+}
+
+func (g *GxlGraphic) GetCurrentFrame() *ebiten.Image {
+	return g.frames[g.currentFrameIdx]
+}
+
+func (g *GxlGraphic) SetCurrentFrameIdx(idx int) {
+	if idx < 0 || idx >= len(g.frames) {
+		log.Panicln("index out of bounds")
+	}
+	g.currentFrameIdx = idx
 }
 
 func (g *GxlGraphic) GetSize() (int, int) {

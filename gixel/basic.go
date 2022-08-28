@@ -17,15 +17,19 @@ func (b *BaseGxlBasic) Init(g *GxlGame) {
 	b.id = g.GenerateID()
 	b.visible = true
 	b.exists = true
+	b.game.counters.InitCount.Increment()
 }
 
 func (b *BaseGxlBasic) Destroy() {
 	b.exists = false
 }
 
-func (b *BaseGxlBasic) Draw(screen *ebiten.Image) {}
+func (b *BaseGxlBasic) Draw(screen *ebiten.Image) {
+	b.game.counters.DrawCount.Increment()
+}
 
 func (b *BaseGxlBasic) Update(elapsed float64) error {
+	b.game.counters.UpdateCount.Increment()
 	return nil
 }
 

@@ -1,12 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 
-	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/odedro987/gixel-engine/gixel"
 	"github.com/odedro987/gixel-engine/gixel/font"
 )
@@ -47,11 +44,6 @@ func (s *PlayState) Init(game *gixel.GxlGame) {
 		}
 	})
 	s.spawnTimer.Start()
-}
-
-func (s *PlayState) Draw(screen *ebiten.Image) {
-	s.BaseGxlState.Draw(screen)
-	ebitenutil.DebugPrint(screen, fmt.Sprintf("%f - %d", ebiten.CurrentTPS(), s.letters.Length()))
 }
 
 func (s *PlayState) Update(elapsed float64) error {

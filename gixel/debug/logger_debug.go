@@ -1,7 +1,10 @@
-package log
+//go:build debug
+
+package debug
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -20,9 +23,12 @@ type GxlLogger struct {
 }
 
 func NewLogger(ttl time.Duration) *GxlLogger {
-	return &GxlLogger{
+	logger := GxlLogger{
 		ttl: ttl,
 	}
+	log.SetFlags(0) // Remove timestamp prefix
+	log.SetOutput(&logger)
+	return &logger
 }
 
 func (l *GxlLogger) getFirstAvailable() *logEntry {

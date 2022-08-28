@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	gl "github.com/odedro987/gixel-engine/gixel/log"
+	"github.com/odedro987/gixel-engine/gixel/debug"
 )
 
 type GxlGame struct {
@@ -15,11 +15,11 @@ type GxlGame struct {
 	lastFrame   time.Time
 	state       GxlState
 	zoom        int
-	logger      *gl.GxlLogger
-	isDebug     bool // TODO: Expose
+	logger      *debug.GxlLogger
 	timescale   float64
 	nextID      int
 	stateLoaded bool
+	counters    debug.DebugCounters
 }
 
 func NewGame(width, height int, title string, initialState GxlState, zoom int) {
@@ -29,7 +29,6 @@ func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 		title:       title,
 		lastFrame:   time.Now(),
 		zoom:        zoom,
-		isDebug:     true,
 		timescale:   1,
 		nextID:      0,
 		stateLoaded: false,
@@ -40,15 +39,17 @@ func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 	ebiten.SetWindowTitle(title)
 
 	// Use custom GxlLogger
-	g.logger = gl.NewLogger(time.Second * 5)
-	log.SetFlags(0) // Remove timestamp prefix
-	log.SetOutput(g.logger)
+	g.logger = debug.NewLogger(time.Second * 5)
 
 	if err := ebiten.RunGame(&g); err != nil {
 		log.Fatal(err)
 	}
 	defer func() { g.state.Destroy() }()
 
+}
+
+func (g *GxlGame) Counters() *debug.DebugCounters {
+	return &g.counters
 }
 
 func (g *GxlGame) GenerateID() int {
@@ -71,6 +72,7 @@ func (g *GxlGame) Update() error {
 	if !g.stateLoaded {
 		return nil
 	}
+	g.counters.UpdateCount.Clear()
 
 	// TODO: Figure out what to do with TPS
 	elapsed := 1.0 / float64(ebiten.MaxTPS())
@@ -89,11 +91,12 @@ func (g *GxlGame) Draw(screen *ebiten.Image) {
 	if !g.stateLoaded {
 		return
 	}
+	g.counters.DrawCount.Clear()
 
 	g.state.Draw(screen)
-	if g.isDebug {
-		g.logger.Draw(screen)
-	}
+
+	g.logger.Draw(screen)
+	g.counters.DrawDebugInfo(screen)
 }
 
 // Layout takes the outside size (e.g., the window size) and returns the (logical) screen size.
@@ -112,6 +115,7 @@ func (g *GxlGame) SwitchState(nextState GxlState) {
 	if g.state != nil {
 		g.state.Destroy()
 	}
+	g.counters.InitCount.Clear()
 	g.stateLoaded = false
 	g.state = nextState
 	g.state.Init(g)

@@ -9,13 +9,14 @@ import (
 
 type BaseGxlSprite struct {
 	BaseGxlObject
-	img   *ebiten.Image
-	color color.RGBA // TODO: Think of a better name
+	img      *ebiten.Image
+	color    color.RGBA // TODO: Think of a better name
+	drawOpts *ebiten.DrawImageOptions
 }
 
 func (s *BaseGxlSprite) Init(game *GxlGame) {
 	s.BaseGxlObject.Init(game)
-	s.color = color.RGBA{R: 255, G: 255, B: 255, A: 255}
+	s.drawOpts = &ebiten.DrawImageOptions{}
 }
 
 // NewSprite creates a new instance of GxlSprite in a given position.
@@ -63,17 +64,17 @@ func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
 		return
 	}
 
-	op := &ebiten.DrawImageOptions{}
+	s.drawOpts.GeoM.Reset()
 	w, h := s.img.Size()
-	op.GeoM.Translate(float64(-w/2), float64(-h/2))
-	op.GeoM.Rotate(s.angle * s.angleMultiplier)
-	op.GeoM.Scale(s.scale.X*s.scaleMultiplier.X, s.scale.Y*s.scaleMultiplier.Y)
-	op.GeoM.Translate(float64(w/2), float64(h/2))
-	op.GeoM.Translate(s.x, s.y)
-	// TODO: Add color for tinting/etc
-	op.ColorM.ScaleWithColor(s.color)
+	s.drawOpts.GeoM.Translate(float64(-w/2), float64(-h/2))
+	s.drawOpts.GeoM.Rotate(s.angle * s.angleMultiplier)
+	s.drawOpts.GeoM.Scale(s.scale.X*s.scaleMultiplier.X, s.scale.Y*s.scaleMultiplier.Y)
+	s.drawOpts.GeoM.Translate(float64(w/2), float64(h/2))
+	s.drawOpts.GeoM.Translate(s.x, s.y)
+	// // TODO: Add color for tinting/etc
+	s.drawOpts.ColorM.ScaleWithColor(s.color)
 
-	screen.DrawImage(s.img, op)
+	screen.DrawImage(s.img, s.drawOpts)
 }
 
 type GxlSprite interface {

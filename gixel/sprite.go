@@ -17,6 +17,7 @@ type BaseGxlSprite struct {
 func (s *BaseGxlSprite) Init(game *GxlGame) {
 	s.BaseGxlObject.Init(game)
 	s.drawOpts = &ebiten.DrawImageOptions{}
+	s.color = color.RGBA{255, 255, 255, 255}
 }
 
 // NewSprite creates a new instance of GxlSprite in a given position.

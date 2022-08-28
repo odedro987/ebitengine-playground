@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/odedro987/gixel-engine/gixel"
 	"github.com/odedro987/gixel-engine/gixel/font"
@@ -73,12 +72,6 @@ func (s *PlayState) Init(game *gixel.GxlGame) {
 		})
 	s.startTimer.Start()
 
-}
-
-func (s *PlayState) Draw(screen *ebiten.Image) {
-	s.BaseGxlState.Draw(screen)
-
-	ebitenutil.DebugPrint(screen, fmt.Sprintf("%f", ebiten.CurrentTPS()))
 }
 
 func (s *PlayState) Update(elapsed float64) error {

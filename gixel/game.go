@@ -2,10 +2,13 @@ package gixel
 
 import (
 	"log"
+	"os"
+	"runtime"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/odedro987/gixel-engine/gixel/debug"
+	"github.com/odedro987/gixel-engine/gixel/graphic"
 )
 
 type GxlGame struct {
@@ -20,6 +23,7 @@ type GxlGame struct {
 	nextID      int
 	stateLoaded bool
 	counters    debug.DebugCounters
+	graphics    *graphic.GxlGraphicCache
 }
 
 func NewGame(width, height int, title string, initialState GxlState, zoom int) {
@@ -32,7 +36,11 @@ func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 		timescale:   1,
 		nextID:      0,
 		stateLoaded: false,
+		graphics:    &graphic.GxlGraphicCache{},
 	}
+
+	g.graphics.Init()
+
 	g.SwitchState(initialState)
 
 	ebiten.SetWindowSize(width, height)
@@ -50,6 +58,10 @@ func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 
 func (g *GxlGame) Counters() *debug.DebugCounters {
 	return &g.counters
+}
+
+func (g *GxlGame) Graphics() *graphic.GxlGraphicCache {
+	return g.graphics
 }
 
 func (g *GxlGame) GenerateID() int {
@@ -114,6 +126,7 @@ func (g *GxlGame) State() *GxlState {
 func (g *GxlGame) SwitchState(nextState GxlState) {
 	if g.state != nil {
 		g.state.Destroy()
+		g.graphics.Clear()
 	}
 	g.counters.InitCount.Clear()
 	g.stateLoaded = false

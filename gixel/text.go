@@ -59,8 +59,8 @@ func (t *BaseGxlText) updateGraphic() {
 	p := rect.Size()
 	t.w, t.h = p.X, p.Y
 
-	t.graphic = graphic.LoadGraphicFromImage(ebiten.NewImage(t.w, t.h))
-	text.Draw(t.graphic.GetCurrentFrame(), t.text, t.fontPreset.GetFace(), -rect.Min.X, -rect.Min.Y, color.White)
+	t.graphic = t.Game().Graphics().LoadGraphicFromImage(ebiten.NewImage(t.w, t.h), graphic.CacheOptions{NoCache: true})
+	text.Draw(t.graphic.GetFrame(0), t.text, t.fontPreset.GetFace(), -rect.Min.X, -rect.Min.Y, color.White)
 
 	if t.screenPos == nil {
 		return

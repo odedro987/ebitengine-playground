@@ -2,21 +2,18 @@ package animation
 
 import (
 	"log"
-
-	"github.com/odedro987/gixel-engine/gixel/graphic"
 )
 
 type imports interface {
-	Graphic() *graphic.GxlGraphic
 	W() *int
 	H() *int
+	FrameIdx() *int
 }
 
 type Animation struct {
 	subject    *imports
 	animations map[string]*GxlAnimation
 	currAnim   *GxlAnimation
-	frameIndex int
 }
 
 type Exports interface {
@@ -92,12 +89,11 @@ func (a *Animation) PlayAnimation(name string, force bool) {
 }
 
 func (a *Animation) Update(elapsed float64) {
-	if a.currAnim == nil || (*a.subject).Graphic() == nil {
+	if a.currAnim == nil {
 		return
 	}
 
 	a.currAnim.update(elapsed)
 
-	a.frameIndex = a.currAnim.getCurrentFrame()
-	(*a.subject).Graphic().SetCurrentFrameIdx(a.frameIndex)
+	*(*a.subject).FrameIdx() = a.currAnim.getCurrentFrame()
 }

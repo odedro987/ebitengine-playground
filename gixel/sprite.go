@@ -10,6 +10,7 @@ import (
 type BaseGxlSprite struct {
 	BaseGxlObject
 	graphic  *graphic.GxlGraphic
+	frameIdx int
 	color    color.RGBA // TODO: Think of a better name
 	drawOpts *ebiten.DrawImageOptions
 }
@@ -27,30 +28,17 @@ func NewSprite(x, y float64) GxlSprite {
 	return s
 }
 
-// MakeGraphic creates a new GlxGraphic instance in form of a rectangle
-// with given color and sets it as the sprite's graphic.
-func (s *BaseGxlSprite) MakeGraphic(w, h int, c color.Color) {
-	s.graphic = graphic.MakeGraphic(w, h, c)
-	s.SetSize(w, h)
-}
-
-// LoadGraphic creates a new GlxGraphic from a file path
-// and sets it as the sprite's graphic.
-func (s *BaseGxlSprite) LoadGraphic(path string) {
-	s.graphic = graphic.LoadGraphic(path)
-	w, h := s.graphic.GetSize()
-	s.SetSize(w, h)
-}
-
-// LoadAnimatedGraphic creates a new GlxGraphic from a file path
-// and sets it as the sprite'a graphic.
-func (s *BaseGxlSprite) LoadAnimatedGraphic(path string, fw, fh int) {
-	s.graphic = graphic.LoadAnimatedGraphic(path, fw, fh)
-	s.w, s.h = fw, fh
+func (s *BaseGxlSprite) ApplyGraphic(graphic *graphic.GxlGraphic) {
+	s.graphic = graphic
+	s.SetSize(graphic.GetSize())
 }
 
 func (s *BaseGxlSprite) Graphic() *graphic.GxlGraphic {
 	return s.graphic
+}
+
+func (s *BaseGxlSprite) FrameIdx() *int {
+	return &s.frameIdx
 }
 
 func (s *BaseGxlSprite) Color() *color.RGBA {
@@ -83,14 +71,15 @@ func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
 	s.drawOpts.ColorM.Reset()
 	s.drawOpts.ColorM.ScaleWithColor(s.color)
 
-	screen.DrawImage(s.graphic.GetCurrentFrame(), s.drawOpts)
+	screen.DrawImage(s.graphic.GetFrame(s.frameIdx), s.drawOpts)
 }
 
 type GxlSprite interface {
 	GxlObject
-	MakeGraphic(w, h int, c color.Color)
-	LoadGraphic(path string)
-	LoadAnimatedGraphic(path string, fw, fh int)
+	// MakeGraphic(w, h int, c color.Color)
+	// LoadGraphic(path string)
+	// LoadAnimatedGraphic(path string, fw, fh int)
+	ApplyGraphic(graphic *graphic.GxlGraphic)
 	Graphic() *graphic.GxlGraphic
 	Color() *color.RGBA
 }

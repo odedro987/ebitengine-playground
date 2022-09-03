@@ -16,6 +16,8 @@ func (s *PlayState) Init(game *gixel.GxlGame) {
 
 	s.player = NewPlayer(50, 50)
 	s.Add(s.player)
+	s.Add(NewPlayer(50, 100))
+	s.Add(NewPlayer(50, 150))
 }
 
 func (s *PlayState) Update(elapsed float64) error {

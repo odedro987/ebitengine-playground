@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/odedro987/gixel-engine/gixel"
+	"github.com/odedro987/gixel-engine/gixel/graphic"
 	"github.com/odedro987/gixel-engine/gixel/systems/animation"
 	"github.com/odedro987/gixel-engine/gixel/systems/flipping"
 	"github.com/odedro987/gixel-engine/gixel/systems/physics"
@@ -33,7 +34,7 @@ func (p *Player) Init(game *gixel.GxlGame) {
 	p.Animation.Init(p)
 	p.Movement.Init(p)
 
-	p.LoadAnimatedGraphic("assets/player.png", 32, 32)
+	p.ApplyGraphic(game.Graphics().LoadAnimatedGraphic("assets/player.png", 32, 32, graphic.CacheOptions{}))
 	p.SetFacingFlip(gixel.Right, false, false)
 	p.SetFacingFlip(gixel.Left, true, false)
 

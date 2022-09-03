@@ -17,7 +17,7 @@ Gixel Engine is a Golang game development engine built on top of [Ebitengine](ht
 - [x] GxlTimer
 - [ ] GUI (Button, SpriteButton, Progress Bar)
 - [ ] GxlSound
-- [ ] Cache GxlGraphic
+- [x] Cache GxlGraphic
 - [ ] Particles
 - [ ] Tiled tilemaps
 - [ ] Tilemap Pathfinding (A*)

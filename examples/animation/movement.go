@@ -21,6 +21,10 @@ type Movement struct {
 	isMoving  bool
 	moveAngle float64
 	animName  string
+	upKey     ebiten.Key
+	downKey   ebiten.Key
+	rightKey  ebiten.Key
+	leftKey   ebiten.Key
 	subject   *movementRequirements
 }
 
@@ -40,6 +44,10 @@ func (p *Movement) Update(elapsed float64) {
 	p.updateMovement(elapsed)
 }
 
+func (p *Movement) SetControls(up, down, left, right ebiten.Key) {
+	p.upKey, p.downKey, p.leftKey, p.rightKey = up, down, left, right
+}
+
 func (p *Movement) CanMove() *bool {
 	return &p.canMove
 }
@@ -49,10 +57,10 @@ func (p *Movement) GetAnimName() string {
 }
 
 func (p *Movement) keyboardControl() {
-	up := ebiten.IsKeyPressed(ebiten.KeyUp)
-	down := ebiten.IsKeyPressed(ebiten.KeyDown)
-	left := ebiten.IsKeyPressed(ebiten.KeyLeft)
-	right := ebiten.IsKeyPressed(ebiten.KeyRight)
+	up := ebiten.IsKeyPressed(p.upKey)
+	down := ebiten.IsKeyPressed(p.downKey)
+	left := ebiten.IsKeyPressed(p.leftKey)
+	right := ebiten.IsKeyPressed(p.rightKey)
 
 	if !p.canMove {
 		p.isMoving = false

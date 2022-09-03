@@ -11,6 +11,13 @@ import (
 	"github.com/odedro987/gixel-engine/gixel/graphic"
 )
 
+// use opengl instead of the much slower directx
+func init() {
+	if runtime.GOOS == "windows" {
+		os.Setenv("EBITEN_GRAPHICS_LIBRARY", "opengl")
+	}
+}
+
 type GxlGame struct {
 	width       int
 	height      int

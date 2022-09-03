@@ -3,6 +3,7 @@ module github.com/odedro987/gixel-engine
 go 1.18
 
 require (
+	github.com/google/uuid v1.3.0
 	github.com/hajimehoshi/ebiten/v2 v2.3.7
 	github.com/tanema/gween v0.0.0-20220318192052-2db1c2d931bd
 	golang.org/x/image v0.0.0-20220722155232-062f8c9fd539

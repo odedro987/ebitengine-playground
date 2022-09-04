@@ -4,30 +4,29 @@ import (
 	"image/color"
 
 	"github.com/odedro987/gixel-engine/gixel"
-	"github.com/odedro987/gixel-engine/gixel/font"
 )
 
 type Letter struct {
-	gixel.BaseGxlText
+	gixel.BaseGxlSprite
 	alpha float64
+	char  string
 }
 
-func NewLetter(x float64, y float64, text string, fontPreset *font.GxlFontPreset) *Letter {
-	t := &Letter{}
-	t.SetPosition(x, y)
-	t.SetText(text)
-	t.SetFontPreset(fontPreset)
-	return t
+func NewLetter(x float64, y float64, char string) *Letter {
+	l := &Letter{char: char}
+	l.SetPosition(x, y)
+	return l
 }
 
 func (l *Letter) Init(game *gixel.GxlGame) {
-	l.BaseGxlText.Init(game)
+	l.BaseGxlSprite.Init(game)
+	l.ApplyGraphic(l.Game().Graphics().Get(l.char))
 	*l.Color() = color.RGBA{G: 255, A: 255}
 	l.alpha = 255
 }
 
 func (l *Letter) Update(elapsed float64) error {
-	err := l.BaseGxlText.Update(elapsed)
+	err := l.BaseGxlSprite.Update(elapsed)
 	if err != nil {
 		return err
 	}

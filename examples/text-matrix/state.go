@@ -17,7 +17,7 @@ type PlayState struct {
 func (s *PlayState) Init(game *gixel.GxlGame) {
 	s.BaseGxlState.Init(game)
 
-	s.letters = gixel.NewGroup(0)
+	s.letters = gixel.NewGroup(6000)
 	s.Add(s.letters)
 
 	f := font.NewFont("assets/Boku2-Bold.otf")
@@ -28,13 +28,17 @@ func (s *PlayState) Init(game *gixel.GxlGame) {
 
 	for _, letter := range alphabet {
 		katakana = append(katakana, letter)
+		s := gixel.NewText(0, 0, string(letter), f.GetPreset(32))
+		s.Init(game)
+		game.Graphics().Add(s.Graphic(), string(letter), false)
 	}
 
 	rand := rand.New(rand.NewSource(time.Now().Unix()))
 	s.spawnTimer = gixel.NewLoopTimer(1.0 / 60).SetCallback(func(totalElapsed float64, iteration int) {
-		for i := 0; i < 20; i++ {
+		for i := 0; i < 50; i++ {
+			char := string(katakana[rand.Int()%(len(katakana)-1)])
 			letter := s.letters.Recycle(func() gixel.GxlBasic {
-				return NewLetter(0, 0, string(katakana[rand.Int()%(len(katakana)-1)]), f.GetPreset(32))
+				return NewLetter(0, 0, char)
 			}).(*Letter)
 
 			*letter.X() = rand.Float64() * GAME_WIDTH

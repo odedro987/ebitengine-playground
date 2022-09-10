@@ -148,8 +148,7 @@ func (gc *GxlGraphicCache) LoadAnimatedGraphic(path string, fw, fh int, opt Cach
 	if !opt.Unique {
 		g := gc.Get(opt.Key)
 		if g != nil {
-			val := *g
-			return &val
+			return g
 		}
 	} else {
 		opt.Key += "_" + uuid.New().String()

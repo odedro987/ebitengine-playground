@@ -16,7 +16,7 @@ type DebugCounters struct {
 }
 
 func (dc *DebugCounters) DrawDebugInfo(screen *ebiten.Image) {
-	ebitenutil.DebugPrint(screen, fmt.Sprintf("FPS:%f - TPS:%f || I:%d - U:%d - D:%d", ebiten.CurrentFPS(), ebiten.CurrentTPS(), dc.InitCount, dc.UpdateCount, dc.DrawCount))
+	ebitenutil.DebugPrint(screen, fmt.Sprintf("FPS:%f - TPS:%f || I:%d - U:%d - D:%d", ebiten.ActualFPS(), ebiten.ActualTPS(), dc.InitCount, dc.UpdateCount, dc.DrawCount))
 }
 
 type Counter uint64

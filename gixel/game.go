@@ -94,7 +94,7 @@ func (g *GxlGame) Update() error {
 	g.counters.UpdateCount.Clear()
 
 	// TODO: Figure out what to do with TPS
-	elapsed := 1.0 / float64(ebiten.MaxTPS())
+	elapsed := 1.0 / float64(ebiten.TPS())
 
 	err := g.state.Update(g.timescale * elapsed)
 	if err != nil {

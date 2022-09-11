@@ -13,15 +13,16 @@ Gixel Engine is a Golang game development engine built on top of [Ebitengine](ht
 - [x] Collision Detection (Buggy)
 - [x] Animation Callbacks
 - [x] Basic Physics System
-- [ ] GxlCamera
 - [x] GxlTimer
-- [ ] GUI (Button, SpriteButton, Progress Bar)
-- [ ] GxlSound
 - [x] Cache GxlGraphic
+- [ ] GxlCamera (Bounds, Follow/FocusOn, Fade/Shake)
+- [ ] GxlSpriteButton
+- [ ] GxlSound
+- [ ] GxlProgressBar
 - [ ] Particles
 - [ ] Tiled tilemaps
-- [ ] Tilemap Pathfinding (A*)
+- [ ] Tilemap Pathfinding (A\*)
 - [ ] Tilemap Raycasting
 - [ ] Tween
-- [ ] Shaders
+- [ ] Shaders + Camera Filters
 - [ ] Newgrounds API

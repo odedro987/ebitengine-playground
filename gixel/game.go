@@ -35,8 +35,8 @@ type GxlGame struct {
 
 func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 	g := GxlGame{
-		width:       width,
-		height:      height,
+		width:       width / zoom,
+		height:      height / zoom,
 		title:       title,
 		lastFrame:   time.Now(),
 		zoom:        zoom,
@@ -123,7 +123,7 @@ func (g *GxlGame) Draw(screen *ebiten.Image) {
 // Layout takes the outside size (e.g., the window size) and returns the (logical) screen size.
 // If you don't have to adjust the screen size with the outside size, just return a fixed size.
 func (g *GxlGame) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return g.width / g.zoom, g.height / g.zoom
+	return g.width, g.height
 }
 
 func (g *GxlGame) State() *GxlState {

@@ -15,7 +15,7 @@ import (
 
 type MenuState struct {
 	gixel.BaseGxlState
-	text              *gixel.GxlText
+	text              gixel.GxlText
 	textScaleSequence *gween.Sequence
 	textAngleSequence *gween.Sequence
 	textColorSequence *gween.Sequence
@@ -43,7 +43,7 @@ func (s *MenuState) Init(game *gixel.GxlGame) {
 	s.Add(textL)
 
 	text := gixel.NewText(100, 100, "Hello World", fontSmall)
-	s.text = &text
+	s.text = text
 
 	s.textScaleSequence = gween.NewSequence(
 		gween.New(1, 2, 5, ease.InQuad),
@@ -75,15 +75,15 @@ func (s *MenuState) Update(elapsed float64) error {
 	}
 
 	currentScale, _, _ := s.textScaleSequence.Update(float32(elapsed))
-	(*s.text).Scale().X = float64(currentScale)
-	(*s.text).Scale().Y = float64(currentScale)
+	s.text.Scale().X = float64(currentScale)
+	s.text.Scale().Y = float64(currentScale)
 
 	currentAngle, _, _ := s.textAngleSequence.Update(float32(elapsed))
-	*(*s.text).Angle() = float64(currentAngle)
+	*s.text.Angle() = float64(currentAngle)
 
 	currentRed, _, _ := s.textColorSequence.Update(float32(elapsed))
-	(*s.text).Color().R = 255 - uint8(currentRed)
-	(*s.text).Color().G = uint8(currentRed)
+	s.text.Color().R = 255 - uint8(currentRed)
+	s.text.Color().G = uint8(currentRed)
 
 	if ebiten.IsKeyPressed(ebiten.KeyP) {
 		s.Game().SwitchState(&PlayState{})

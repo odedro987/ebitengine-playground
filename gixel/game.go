@@ -22,7 +22,6 @@ type GxlGame struct {
 	width       int
 	height      int
 	title       string
-	lastFrame   time.Time
 	state       GxlState
 	zoom        int
 	logger      *debug.GxlLogger
@@ -38,7 +37,6 @@ func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 		width:       width / zoom,
 		height:      height / zoom,
 		title:       title,
-		lastFrame:   time.Now(),
 		zoom:        zoom,
 		timescale:   1,
 		nextID:      0,

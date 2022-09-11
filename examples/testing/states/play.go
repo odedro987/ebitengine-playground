@@ -11,7 +11,7 @@ import (
 type PlayState struct {
 	gixel.BaseGxlState
 	player *entities.Player
-	walls  *gixel.BaseGxlGroup
+	walls  gixel.GxlGroup
 	wall   *entities.Wall
 	//Systems
 	collision.Collision

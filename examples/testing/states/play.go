@@ -38,11 +38,6 @@ func (s *PlayState) Init(game *gixel.GxlGame) {
 	s.Add(s.player)
 }
 
-func (s *PlayState) Draw(screen *ebiten.Image) {
-	s.BaseGxlState.Draw(screen)
-	// ebitenutil.DebugPrint(screen, strconv.Itoa(s.testGroup.Length()))
-}
-
 func (s *PlayState) Update(elapsed float64) error {
 	err := s.BaseGxlState.Update(elapsed)
 	if err != nil {

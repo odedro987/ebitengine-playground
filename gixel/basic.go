@@ -1,14 +1,11 @@
 package gixel
 
-import (
-	"github.com/hajimehoshi/ebiten/v2"
-)
-
 type BaseGxlBasic struct {
 	game    *GxlGame
 	id      int
 	visible bool
 	exists  bool
+	camera  *GxlCamera
 	// TODO: Do we want current state ref here?
 }
 
@@ -17,14 +14,25 @@ func (b *BaseGxlBasic) Init(g *GxlGame) {
 	b.id = g.GenerateID()
 	b.visible = true
 	b.exists = true
+	if b.camera == nil {
+		b.camera = g.state.Cameras().GetDefault()
+	}
 	b.game.counters.InitCount.Increment()
+}
+
+func (b *BaseGxlBasic) SwitchCamera(camera *GxlCamera) {
+	b.camera = camera
+}
+
+func (b *BaseGxlBasic) Camera() GxlCamera {
+	return *b.camera
 }
 
 func (b *BaseGxlBasic) Destroy() {
 	b.exists = false
 }
 
-func (b *BaseGxlBasic) Draw(screen *ebiten.Image) {
+func (b *BaseGxlBasic) Draw() {
 	b.game.counters.DrawCount.Increment()
 }
 
@@ -52,10 +60,12 @@ func (b *BaseGxlBasic) Game() *GxlGame {
 type GxlBasic interface {
 	Init(g *GxlGame)
 	Destroy()
-	Draw(screen *ebiten.Image)
+	Draw()
 	Update(elapsed float64) error
 	GetID() int
 	Visible() *bool
 	Exists() *bool
 	Game() *GxlGame
+	Camera() GxlCamera
+	SwitchCamera(camera *GxlCamera)
 }

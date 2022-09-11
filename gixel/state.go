@@ -4,6 +4,16 @@ type CallbackFunc = func(obj1, obj2 *GxlObject)
 
 type BaseGxlState struct {
 	BaseGxlGroup
+	cameras GxlCameraManager
+}
+
+func (s *BaseGxlState) Init(game *GxlGame) {
+	s.cameras.Init(game)
+	s.BaseGxlGroup.Init(game)
+}
+
+func (s *BaseGxlState) Cameras() *GxlCameraManager {
+	return &s.cameras
 }
 
 func (s *BaseGxlState) OverlapsObjectGroup(obj GxlObject, grp GxlGroup, callbacks ...CallbackFunc) bool {
@@ -49,4 +59,5 @@ type GxlState interface {
 	GxlGroup
 	OverlapsObjectGroup(obj GxlObject, grp GxlGroup, callbacks ...CallbackFunc) bool
 	OverlapsGroups(grp1, grp2 GxlGroup, callbacks ...CallbackFunc) bool
+	Cameras() *GxlCameraManager
 }

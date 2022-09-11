@@ -114,7 +114,7 @@ func (g *GxlGame) Draw(screen *ebiten.Image) {
 	}
 	g.counters.DrawCount.Clear()
 
-	g.state.Draw(screen)
+	g.state.Cameras().Draw(screen)
 
 	g.logger.Draw(screen)
 	g.counters.DrawDebugInfo(screen)

@@ -2,8 +2,6 @@ package gixel
 
 import (
 	"log"
-
-	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type BaseGxlGroup struct {
@@ -128,10 +126,10 @@ func (g *BaseGxlGroup) Range(f func(idx int, value GxlBasic) bool) {
 	}
 }
 
-func (g *BaseGxlGroup) Draw(screen *ebiten.Image) {
+func (g *BaseGxlGroup) Draw() {
 	for _, m := range g.members {
 		if m != nil && *m.Exists() && *m.Visible() {
-			m.Draw(screen)
+			m.Draw()
 		}
 	}
 }

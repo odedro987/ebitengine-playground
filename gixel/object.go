@@ -15,6 +15,7 @@ const (
 	Right GxlDirection = 0x1000
 )
 
+// TODO: Consider removing/merging with GxlSprite
 type BaseGxlObject struct {
 	BaseGxlBasic
 	x, y            float64
@@ -23,6 +24,7 @@ type BaseGxlObject struct {
 	angleMultiplier float64
 	scale           *math.GxlPoint
 	scaleMultiplier *math.GxlPoint
+	scrollFactor    *math.GxlPoint
 }
 
 func (o *BaseGxlObject) Init(game *GxlGame) {
@@ -30,6 +32,7 @@ func (o *BaseGxlObject) Init(game *GxlGame) {
 	o.scale = math.NewPoint(1, 1)
 	o.scaleMultiplier = math.NewPoint(1, 1)
 	o.angleMultiplier = 1
+	o.scrollFactor = math.NewPoint(1, 1)
 }
 
 func (o *BaseGxlObject) X() *float64 {
@@ -54,6 +57,10 @@ func (o *BaseGxlObject) GetPosition() (x, y float64) {
 
 func (o *BaseGxlObject) SetPosition(x, y float64) {
 	o.x, o.y = x, y
+}
+
+func (o *BaseGxlObject) ScreenPosition() (x, y float64) {
+	return o.x - o.camera.scroll.X*o.scrollFactor.X, o.y - o.camera.scroll.Y*o.scrollFactor.Y
 }
 
 func (o *BaseGxlObject) GetSize() (w, h int) {
@@ -92,6 +99,10 @@ func (o *BaseGxlObject) Overlaps(obj GxlObject) bool {
 	return o.Bounds().Overlaps(obj.Bounds())
 }
 
+func (o *BaseGxlObject) OnScreen() bool {
+	return o.camera.ContainsRect(o.Bounds())
+}
+
 type GxlObject interface {
 	GxlBasic
 	X() *float64
@@ -100,6 +111,7 @@ type GxlObject interface {
 	H() *int
 	GetPosition() (x, y float64)
 	SetPosition(x, y float64)
+	ScreenPosition() (x, y float64)
 	GetSize() (w, h int)
 	SetSize(w, h int)
 	Scale() *math.GxlPoint
@@ -108,4 +120,5 @@ type GxlObject interface {
 	AngleMultiplier() *float64
 	Bounds() *math.GxlRectangle
 	Overlaps(obj GxlObject) bool
+	OnScreen() bool
 }

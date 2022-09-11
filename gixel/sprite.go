@@ -54,24 +54,29 @@ func (s *BaseGxlSprite) Update(elapsed float64) error {
 	return nil
 }
 
-func (s *BaseGxlSprite) Draw(screen *ebiten.Image) {
-	s.BaseGxlObject.Draw(screen)
+func (s *BaseGxlSprite) Draw() {
+	if !s.OnScreen() {
+		return
+	}
+
+	s.BaseGxlObject.Draw()
 	if s.graphic == nil {
 		return
 	}
 
 	s.drawOpts.GeoM.Reset()
+	sx, sy := s.ScreenPosition()
 	w, h := s.graphic.GetSize()
 	s.drawOpts.GeoM.Translate(float64(-w/2), float64(-h/2))
 	s.drawOpts.GeoM.Rotate(s.angle * s.angleMultiplier)
 	s.drawOpts.GeoM.Scale(s.scale.X*s.scaleMultiplier.X, s.scale.Y*s.scaleMultiplier.Y)
 	s.drawOpts.GeoM.Translate(float64(w/2), float64(h/2))
-	s.drawOpts.GeoM.Translate(s.x, s.y)
+	s.drawOpts.GeoM.Translate(sx, sy)
 	// // TODO: Add color for tinting/etc
 	s.drawOpts.ColorM.Reset()
 	s.drawOpts.ColorM.ScaleWithColor(s.color)
 
-	screen.DrawImage(s.graphic.GetFrame(s.frameIdx), s.drawOpts)
+	s.camera.Screen().DrawImage(s.graphic.GetFrame(s.frameIdx), s.drawOpts)
 }
 
 type GxlSprite interface {

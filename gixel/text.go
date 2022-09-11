@@ -70,13 +70,13 @@ func (t *BaseGxlText) updateGraphic() {
 	t.screenPos = nil
 }
 
-func (t *BaseGxlText) Draw(screen *ebiten.Image) {
+func (t *BaseGxlText) Draw() {
 	if t.needUpdate {
 		t.updateGraphic()
 	}
 	t.needUpdate = false
 
-	t.BaseGxlSprite.Draw(screen)
+	t.BaseGxlSprite.Draw()
 }
 
 type GxlText interface {

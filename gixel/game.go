@@ -52,6 +52,8 @@ func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 
 	ebiten.SetWindowSize(width, height)
 	ebiten.SetWindowTitle(title)
+	// TODO: Debug mode
+	ebiten.SetFPSMode(ebiten.FPSModeVsyncOffMaximum)
 
 	// Use custom GxlLogger
 	g.logger = debug.NewLogger(time.Second * 5)

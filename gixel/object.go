@@ -81,6 +81,10 @@ func (o *BaseGxlObject) ScaleMultiplier() *math.GxlPoint {
 	return o.scaleMultiplier
 }
 
+func (o *BaseGxlObject) ScrollFactor() *math.GxlPoint {
+	return o.scrollFactor
+}
+
 func (o *BaseGxlObject) Angle() *float64 {
 	return &o.angle
 }
@@ -127,10 +131,12 @@ type GxlObject interface {
 	SetSize(w, h int)
 	Scale() *math.GxlPoint
 	ScaleMultiplier() *math.GxlPoint
+	ScrollFactor() *math.GxlPoint
 	Angle() *float64
 	AngleMultiplier() *float64
 	Offset() *math.GxlPoint
 	Bounds() *math.GxlRectangle
+	SetHitbox(x, y float64, w, h int)
 	Overlaps(obj GxlObject) bool
 	OnScreen() bool
 }

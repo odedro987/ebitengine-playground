@@ -4,16 +4,22 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/odedro987/gixel-engine/gixel"
+	"github.com/odedro987/gixel-engine/gixel/systems/collision"
 )
 
 type PlayState struct {
 	gixel.BaseGxlState
 	player1 *Player
 	player2 *Player
+
+	//Systems
+	collision.Collision
 }
 
 func (s *PlayState) Init(game *gixel.GxlGame) {
 	s.BaseGxlState.Init(game)
+
+	s.Collision.Init(s)
 
 	s.player1 = NewPlayer(50, 50)
 	s.Add(s.player1)
@@ -31,6 +37,9 @@ func (s *PlayState) Update(elapsed float64) error {
 	if err != nil {
 		return err
 	}
+
+	s.Collision.CollideObjects(s.player1, s.player2)
+	s.Collision.Update(elapsed)
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyF) {
 		fullscreen := ebiten.IsFullscreen()

@@ -30,7 +30,7 @@ func NewSprite(x, y float64) GxlSprite {
 
 func (s *BaseGxlSprite) ApplyGraphic(graphic *graphic.GxlGraphic) {
 	s.graphic = graphic
-	s.SetSize(graphic.GetSize())
+	s.SetSize(graphic.Size())
 }
 
 func (s *BaseGxlSprite) Graphic() *graphic.GxlGraphic {
@@ -66,7 +66,7 @@ func (s *BaseGxlSprite) Draw() {
 
 	s.drawOpts.GeoM.Reset()
 	sx, sy := s.ScreenPosition()
-	w, h := s.graphic.GetSize()
+	w, h := s.graphic.Size()
 	s.drawOpts.GeoM.Translate(float64(-w/2), float64(-h/2))
 	s.drawOpts.GeoM.Rotate(s.angle * s.angleMultiplier)
 	s.drawOpts.GeoM.Scale(s.scale.X*s.scaleMultiplier.X, s.scale.Y*s.scaleMultiplier.Y)

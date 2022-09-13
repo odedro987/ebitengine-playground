@@ -18,6 +18,16 @@ func (g *GxlGraphic) GetFrame(idx int) *ebiten.Image {
 	return g.frames[idx]
 }
 
-func (g *GxlGraphic) GetSize() (int, int) {
+func (g *GxlGraphic) Size() (int, int) {
 	return g.frames[0].Size()
+}
+
+func (g *GxlGraphic) FrameWidth() int {
+	w, _ := g.frames[0].Size()
+	return w
+}
+
+func (g *GxlGraphic) FrameHeight() int {
+	_, h := g.frames[0].Size()
+	return h
 }

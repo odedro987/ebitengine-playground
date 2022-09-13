@@ -35,6 +35,7 @@ func (p *Player) Init(game *gixel.GxlGame) {
 	p.Movement.Init(p)
 
 	p.ApplyGraphic(game.Graphics().LoadAnimatedGraphic("assets/player.png", 32, 32, graphic.CacheOptions{}))
+	p.SetHitbox(9, 14, 14, 18)
 	p.SetFacingFlip(gixel.Right, false, false)
 	p.SetFacingFlip(gixel.Left, true, false)
 

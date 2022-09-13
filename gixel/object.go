@@ -25,6 +25,7 @@ type BaseGxlObject struct {
 	scale           *math.GxlPoint
 	scaleMultiplier *math.GxlPoint
 	scrollFactor    *math.GxlPoint
+	offset          *math.GxlPoint
 }
 
 func (o *BaseGxlObject) Init(game *GxlGame) {
@@ -33,6 +34,7 @@ func (o *BaseGxlObject) Init(game *GxlGame) {
 	o.scaleMultiplier = math.NewPoint(1, 1)
 	o.angleMultiplier = 1
 	o.scrollFactor = math.NewPoint(1, 1)
+	o.offset = math.NewPoint(0, 0)
 }
 
 func (o *BaseGxlObject) X() *float64 {
@@ -87,8 +89,17 @@ func (o *BaseGxlObject) AngleMultiplier() *float64 {
 	return &o.angleMultiplier
 }
 
+func (o *BaseGxlObject) Offset() *math.GxlPoint {
+	return o.offset
+}
+
 func (o *BaseGxlObject) Bounds() *math.GxlRectangle {
-	return math.NewRectangle(o.x, o.y, float64(o.w), float64(o.h))
+	return math.NewRectangle(o.x+o.offset.X, o.y+o.offset.Y, float64(o.w), float64(o.h))
+}
+
+func (o *BaseGxlObject) SetHitbox(x, y float64, w, h int) {
+	o.offset.X, o.offset.Y = x, y
+	o.SetSize(w, h)
 }
 
 func (o *BaseGxlObject) Overlaps(obj GxlObject) bool {
@@ -118,6 +129,7 @@ type GxlObject interface {
 	ScaleMultiplier() *math.GxlPoint
 	Angle() *float64
 	AngleMultiplier() *float64
+	Offset() *math.GxlPoint
 	Bounds() *math.GxlRectangle
 	Overlaps(obj GxlObject) bool
 	OnScreen() bool

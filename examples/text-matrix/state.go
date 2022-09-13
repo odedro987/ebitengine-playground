@@ -60,19 +60,19 @@ func (s *PlayState) Update(elapsed float64) error {
 	s.spawnTimer.Update(elapsed)
 
 	if ebiten.IsKeyPressed(ebiten.KeyRight) {
-		s.Cameras().GetDefault().Scroll().X -= 10
-	}
-
-	if ebiten.IsKeyPressed(ebiten.KeyLeft) {
 		s.Cameras().GetDefault().Scroll().X += 10
 	}
 
+	if ebiten.IsKeyPressed(ebiten.KeyLeft) {
+		s.Cameras().GetDefault().Scroll().X -= 10
+	}
+
 	if ebiten.IsKeyPressed(ebiten.KeyUp) {
-		s.Cameras().GetDefault().Scroll().Y += 10
+		s.Cameras().GetDefault().Scroll().Y -= 10
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyDown) {
-		s.Cameras().GetDefault().Scroll().Y -= 10
+		s.Cameras().GetDefault().Scroll().Y += 10
 	}
 
 	return nil

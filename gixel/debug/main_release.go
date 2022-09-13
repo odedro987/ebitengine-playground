@@ -4,13 +4,18 @@ package debug
 
 import "github.com/hajimehoshi/ebiten/v2"
 
-type DebugCounters struct {
+type Debug struct {
+	Counters  Counters
+	Collision Collision
+}
+
+type Counters struct {
 	InitCount   Counter
 	UpdateCount Counter
 	DrawCount   Counter
 }
 
-func (dc *DebugCounters) DrawDebugInfo(screen *ebiten.Image) {}
+func (dc *Counters) DrawInfo(screen *ebiten.Image) {}
 
 type Counter bool // changed to bool to save memory
 

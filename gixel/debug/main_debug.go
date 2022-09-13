@@ -9,13 +9,18 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
-type DebugCounters struct {
+type Debug struct {
+	Counters  Counters
+	Collision Collision
+}
+
+type Counters struct {
 	InitCount   Counter
 	UpdateCount Counter
 	DrawCount   Counter
 }
 
-func (dc *DebugCounters) DrawDebugInfo(screen *ebiten.Image) {
+func (dc *Counters) DrawInfo(screen *ebiten.Image) {
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("FPS:%f - TPS:%f || I:%d - U:%d - D:%d", ebiten.ActualFPS(), ebiten.ActualTPS(), dc.InitCount, dc.UpdateCount, dc.DrawCount))
 }
 

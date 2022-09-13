@@ -5,6 +5,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/odedro987/gixel-engine/gixel/graphic"
+	"github.com/odedro987/gixel-engine/gixel/math"
 )
 
 type BaseGxlSprite struct {
@@ -77,6 +78,8 @@ func (s *BaseGxlSprite) Draw() {
 	s.drawOpts.ColorM.ScaleWithColor(s.color)
 
 	s.camera.Screen().DrawImage(s.graphic.GetFrame(s.frameIdx), s.drawOpts)
+	// TODO: This currently prevents draw call batching, consider drawing in a separate run
+	s.game.Debug().Collision.DrawBounds(s.camera.Screen(), *math.NewRectangle(sx+s.offset.X, sy+s.offset.Y, float64(s.w), float64(s.h)))
 }
 
 type GxlSprite interface {

@@ -17,7 +17,7 @@ func (b *BaseGxlBasic) Init(g *GxlGame) {
 	if b.camera == nil {
 		b.camera = g.state.Cameras().GetDefault()
 	}
-	b.game.counters.InitCount.Increment()
+	b.game.Debug().Counters.InitCount.Increment()
 }
 
 func (b *BaseGxlBasic) SwitchCamera(camera *GxlCamera) {
@@ -33,11 +33,11 @@ func (b *BaseGxlBasic) Destroy() {
 }
 
 func (b *BaseGxlBasic) Draw() {
-	b.game.counters.DrawCount.Increment()
+	b.game.Debug().Counters.DrawCount.Increment()
 }
 
 func (b *BaseGxlBasic) Update(elapsed float64) error {
-	b.game.counters.UpdateCount.Increment()
+	b.game.Debug().Counters.UpdateCount.Increment()
 	return nil
 }
 

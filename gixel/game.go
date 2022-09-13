@@ -28,7 +28,7 @@ type GxlGame struct {
 	timescale   float64
 	nextID      int
 	stateLoaded bool
-	counters    debug.DebugCounters
+	debug       debug.Debug
 	graphics    *graphic.GxlGraphicCache
 }
 
@@ -63,8 +63,8 @@ func NewGame(width, height int, title string, initialState GxlState, zoom int) {
 
 }
 
-func (g *GxlGame) Counters() *debug.DebugCounters {
-	return &g.counters
+func (g *GxlGame) Debug() *debug.Debug {
+	return &g.debug
 }
 
 func (g *GxlGame) Graphics() *graphic.GxlGraphicCache {
@@ -91,7 +91,8 @@ func (g *GxlGame) Update() error {
 	if !g.stateLoaded {
 		return nil
 	}
-	g.counters.UpdateCount.Clear()
+	g.debug.Counters.UpdateCount.Clear()
+	g.debug.Collision.Update()
 
 	// TODO: Figure out what to do with TPS
 	elapsed := 1.0 / float64(ebiten.TPS())
@@ -110,12 +111,12 @@ func (g *GxlGame) Draw(screen *ebiten.Image) {
 	if !g.stateLoaded {
 		return
 	}
-	g.counters.DrawCount.Clear()
+	g.debug.Counters.DrawCount.Clear()
 
 	g.state.Cameras().Draw(screen)
 
 	g.logger.Draw(screen)
-	g.counters.DrawDebugInfo(screen)
+	g.debug.Counters.DrawInfo(screen)
 }
 
 // Layout takes the outside size (e.g., the window size) and returns the (logical) screen size.
@@ -135,7 +136,7 @@ func (g *GxlGame) SwitchState(nextState GxlState) {
 		g.state.Destroy()
 		g.graphics.Clear()
 	}
-	g.counters.InitCount.Clear()
+	g.debug.Counters.InitCount.Clear()
 	g.stateLoaded = false
 	g.state = nextState
 	g.state.Init(g)

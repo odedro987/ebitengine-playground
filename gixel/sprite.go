@@ -84,10 +84,8 @@ func (s *BaseGxlSprite) Draw() {
 
 type GxlSprite interface {
 	GxlObject
-	// MakeGraphic(w, h int, c color.Color)
-	// LoadGraphic(path string)
-	// LoadAnimatedGraphic(path string, fw, fh int)
 	ApplyGraphic(graphic *graphic.GxlGraphic)
 	Graphic() *graphic.GxlGraphic
+	FrameIdx() *int
 	Color() *color.RGBA
 }

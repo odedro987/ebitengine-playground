@@ -114,6 +114,14 @@ func (g *BaseGxlGroup) Length() int {
 	return len(g.members)
 }
 
+func (g *BaseGxlGroup) Get(idx int) GxlBasic {
+	if idx < 0 || idx > len(g.members)-1 {
+		return nil
+	}
+
+	return g.members[idx]
+}
+
 func (g *BaseGxlGroup) Range(f func(idx int, value GxlBasic) bool) {
 	for idx, m := range g.members {
 		if m == nil {

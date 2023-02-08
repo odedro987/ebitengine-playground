@@ -1,5 +1,7 @@
 # Gixel Engine
 
+Moved to its own organization: https://github.com/GixelEngine.
+
 Gixel Engine is a Golang game development engine built on top of [Ebitengine](https://github.com/hajimehoshi/ebiten) and inspired by [Flixel](https://github.com/HaxeFlixel/flixel).
 
 **_TODO_**
